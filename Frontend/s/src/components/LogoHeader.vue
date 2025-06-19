@@ -15,14 +15,14 @@
 <style scoped>
 .logo-header {
   height: 100px;
-  background: linear-gradient(90deg, #409EFF, #66b1ff 80%);
+  background: linear-gradient(45deg, #409EFF, #3687de 33%, #61b0fe 100%);
   padding-left: 32px;
   font-size: 2rem;
   color: #fff;
   font-weight: bold;
   letter-spacing: 2px;
   user-select: none;
-  box-shadow: 0 2px 8px rgba(64,158,255,.09);
+  box-shadow: 0 2px 8px rgba(64,158,255,0.5);
 }
 
 .logo {
