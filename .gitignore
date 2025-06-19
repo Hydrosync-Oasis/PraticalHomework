@@ -21,3 +21,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# 默认忽略的文件
+/shelf/
+/workspace.xml
