@@ -6,7 +6,6 @@
 
     </ChartImage>
   </div>
-  <!-- 内容超出时会在本区域出现滚动条 -->
 </template>
 
 <script setup>
@@ -69,10 +68,10 @@ const arr = readonly([
 }
 
 .container {
-  width: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   height: 100%;
+  overflow: scroll;
 }
 </style>

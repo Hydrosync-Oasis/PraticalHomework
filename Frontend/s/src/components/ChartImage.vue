@@ -4,7 +4,8 @@
             <template v-slot:header>
                 {{ alt }}
             </template>
-            <img v-if="src" :src="src" class="chart-img" :alt="alt" @error="onError" />
+            <img v-if="src" :src="src" class="chart-img" :alt="alt" @error="onError"
+              @mousedown="down" @mouseup="up" />
             <div v-else class="placeholder">暂无统计图</div>
         </el-card>
     </div>
@@ -18,14 +19,21 @@ const props = defineProps({
   alt: { type: String, required: false, default: '统计图' }
 })
 
-console.log(props);
-
 
 const hasError = ref(false)
 
 function onError() {
   hasError.value = true
 }
+
+function down() {
+  
+}
+
+function up() {
+  
+}
+
 </script>
 
 <style scoped>
