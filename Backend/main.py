@@ -29,6 +29,9 @@ warnings.filterwarnings('ignore')
 from pathlib import Path
 
 def main():
+    base_dir = Path(__file__).resolve().parent
+    models_dir = base_dir / 'models'
+
     try:
         base_dir = Path(__file__).resolve().parent
         data_path = base_dir / 'data' / 'lung_cancer.csv'
@@ -95,7 +98,7 @@ def main():
     X_train.loc[:, 'AGE'] = scaler.fit_transform(X_train[['AGE']])
     X_test.loc[:, 'AGE'] = scaler.transform(X_test[['AGE']])
 
-    joblib.dump(scaler, './scaler.pkl')
+    joblib.dump(scaler, 'models/scaler.pkl')
 
     param_grid = {
         'C': [0.001, 0.01, 0.1, 1, 10, 100],
