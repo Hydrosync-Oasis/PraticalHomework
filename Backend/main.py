@@ -64,7 +64,7 @@ def main():
 
     # 画图，按需要选择传入df或df_plot
     plot_age_distribution(df_plot)
-    plot_categorical_counts(df_plot, cat_col)
+    ###plot_categorical_counts(df_plot, cat_col)
     plot_correlation_heatmap(df)              # 这里用纯数值df
     plot_gender_cancer_counts(df_plot)
     plot_age_group_stacked_bar(df_plot)
