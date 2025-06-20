@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -6,6 +7,7 @@ import warnings
 
 # 关闭警告提示，防止绘图时出现警告信息
 warnings.filterwarnings('ignore')
+matplotlib.use('Agg')
 
 # 设置中文支持（全局有效）
 plt.rcParams['font.family'] = 'SimHei'           # 显示中文

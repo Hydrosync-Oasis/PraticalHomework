@@ -1,7 +1,7 @@
 <template>
   <div style="font-size:18px;text-align:center;line-height:1;" class="container">
-    <ChartImage :src="chartImg" alt="测试" 
-      v-for="i of [1,2,3,4,5]" :key="i"
+    <ChartImage :src="i.img" :alt="i.txt"
+      v-for="i of arr" :key="i.txt"
       style="width:300px;margin:20px">
 
     </ChartImage>
@@ -10,8 +10,53 @@
 </template>
 
 <script setup>
-import chartImg from '../assets/logo.png'
+import { readonly } from 'vue'
+
 import ChartImage from '../components/ChartImage.vue'
+
+import ROC from '../assets/ROC.png'
+import SmokeAge from '../assets/吸烟年龄统计图.png'
+import AgeVisual from '../assets/年龄可视化.png'
+import AgeCount from '../assets/患者年龄统计.png'
+import PatientsCount from '../assets/患者统计.png'
+import Matrix from '../assets/混淆矩阵.png'
+import HeatMap from '../assets/特征热力图.png'
+import PatientsCompare from '../assets/肺癌患者数量对比.png'
+
+const arr = readonly([
+  {
+    img: ROC,
+    txt: 'ROC预测曲线',
+  },
+  {
+    img: SmokeAge,
+    txt: '吸烟年龄统计图',
+  },
+  {
+    img: AgeVisual,
+    txt: '年龄相关可视化',
+  },
+  {
+    img: AgeCount,
+    txt: '患者年龄统计',
+  },
+  {
+    img: PatientsCount,
+    txt: '患者数量统计',
+  },
+  {
+    img: Matrix,
+    txt: '混淆矩阵',
+  },
+  {
+    img: HeatMap,
+    txt: '特征热力图',
+  },
+  {
+    img: PatientsCompare,
+    txt: '肺癌患者数量对比',
+  },
+])
 </script>
 
 <style scoped>
@@ -24,6 +69,7 @@ import ChartImage from '../components/ChartImage.vue'
 }
 
 .container {
+  width: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;

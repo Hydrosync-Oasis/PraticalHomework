@@ -11,30 +11,19 @@
                 <el-step title="疾病史" description=""></el-step>
                 <el-step title="症状" description="劳累、气喘、焦虑"></el-step>
             </el-steps>
-            
+
+            <div class="form">
+                <BasicForm @submit="F"></BasicForm>
+            </div>
         </el-main>
     </el-container>
 </template>
 
 <script setup>
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { readonly } from 'vue';
-import * as yup from 'yup';
+import BasicForm from './Forms/BasicInfo.vue'
 
-const schema = readonly(yup.object(
-    {
-        gender: yup.string().required('请选择性别'),
-        age: yup.number()
-            .typeError('请输入数字')
-            .required('请输入年龄')
-            .min(0, '年龄不能为负数')
-            .max(150, '年龄过大'),
-    }
-))
-
-function onSubmit(values) {
-  // 校验通过后，数据在这里
-  console.log('提交数据', values)
+function F() {
+    console.log('接收到了事件')
 }
 </script>
 
