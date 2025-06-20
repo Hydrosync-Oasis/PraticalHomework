@@ -1,6 +1,6 @@
 <template>
     <div class="chart-image-wrapper">
-        <el-card class="" shadow="hover">
+        <el-card style="width: 320px" shadow="hover">
             <template v-slot:header>
                 {{ alt }}
             </template>
@@ -36,8 +36,7 @@ function onError() {
   margin: 20px;
 }
 .chart-card {
-  width: 90%;
-  max-width: 900px;
+  width: 300px;
   border-radius: 18px;
   box-shadow: 0 2px 24px rgba(64,158,255,0.13);
   background: #fff;
