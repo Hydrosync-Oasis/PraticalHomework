@@ -6,6 +6,8 @@ def create_predict_bp(model, scaler):
 
     def preprocess_input(data_dict):
         df_input = pd.DataFrame([data_dict])
+        df_input.columns = df_input.columns.str.upper()  # 👈 添加这一行，兼容小写字段
+
         df_input['GENDER'] = df_input['GENDER'].map({'M': 1, 'F': 0})
         for col in df_input.columns:
             if col not in ['GENDER', 'AGE']:
