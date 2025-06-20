@@ -5,10 +5,10 @@ from analysis import create_analysis_bp
 
 app = Flask(__name__)
 
-# 合并两种CORS配置
+# CORS配置，/api/* 只允许 localhost:8080，其他路由允许所有来源
 CORS(app, resources={
-    r"/*": {"origins": "*"},  # 允许所有来源访问所有路由
-    r"/api/*": {"origins": "http://localhost:8080"}  # 允许localhost:8080访问/api/*路由
+    r"/api/*": {"origins": "http://localhost:8080"},
+    r"/": {"origins": "*"}
 })
 
 # 使用修改后的create_predict_bp，不需要传入模型和scaler参数
@@ -19,7 +19,6 @@ app.register_blueprint(predict_bp, url_prefix='/api')
 analysis_bp = create_analysis_bp()
 app.register_blueprint(analysis_bp, url_prefix='/api/analysis')
 
-# 添加主页路由，避免 404
 @app.route('/')
 def home():
     return 'Lung Cancer Prediction API is running. Visit /api/predict to use the model.'
