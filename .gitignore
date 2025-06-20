@@ -64,7 +64,8 @@ env.bak/
 venv.bak/
 
 # IDEs and editors
-idea/
+.idea/
 vscode/
 
 # etc
+Backend/utils/__pycache__

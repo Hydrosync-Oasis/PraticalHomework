@@ -1,17 +1,18 @@
 from flask import Flask
-import joblib
+from flask_cors import CORS
 from app.predict_bp import create_predict_bp
 from analysis import create_analysis_bp
-from flask_cors import CORS
-
-model = joblib.load('models/best_lung_cancer_model.pkl')
-scaler = joblib.load('models/scaler.pkl')
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # 允许跨域请求
 
-# 注册预测 API 路由
-predict_bp = create_predict_bp(model, scaler)
+# 合并两种CORS配置
+CORS(app, resources={
+    r"/*": {"origins": "*"},  # 允许所有来源访问所有路由
+    r"/api/*": {"origins": "http://localhost:8080"}  # 允许localhost:8080访问/api/*路由
+})
+
+# 使用修改后的create_predict_bp，不需要传入模型和scaler参数
+predict_bp = create_predict_bp()
 app.register_blueprint(predict_bp, url_prefix='/api')
 
 # 注册数据分析 API 路由
