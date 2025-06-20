@@ -24,6 +24,7 @@
 import BasicForm from './Forms/BasicInfo.vue'
 import DiseaseForm from './Forms/Disease.vue'
 import SymptomForm from './Forms/Symptom.vue'
+import { PredictLungCancer } from '../api/ml.js'
 import { ref } from 'vue'
 
 const components = [BasicForm, DiseaseForm, SymptomForm];
@@ -31,11 +32,16 @@ const formsData = [];
 const index = ref(0);   
 
 function F(values) {
-    console.log(index.value)
+    formsData[index.value] = values;
+    console.log(formsData)
     if (index.value == components.length - 1) {
+        // axios
+        const data = { };
+        Object.assign(data, ...formsData);
+        console.log(data);
+        const res = PredictLungCancer(data);
         return;
     }
-    formsData[index.value] = values;
     index.value++;
 }
 </script>
