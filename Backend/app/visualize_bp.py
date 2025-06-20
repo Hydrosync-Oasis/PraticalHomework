@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import io
 import base64
 
+#  关键导入：从 utils 包导入自定义绘图函数
 from utils.visualize import (
     plot_age_distribution,
     plot_categorical_counts,
@@ -12,8 +13,6 @@ from utils.visualize import (
     plot_smoking_boxplot,
     plot_sample_counts_before_after_sampling
 )
-
-
 
 visualize_bp = Blueprint('visualize_bp', __name__)
 
@@ -25,7 +24,7 @@ def fig_to_base64(fig):
     plt.close(fig)
     return img_base64
 
-# 需要传入完整的df，假设在主app.py加载后赋值给此模块
+# ✅ 全局 df 变量，用于测试；运行前你必须在主程序中赋值
 df = None
 
 @visualize_bp.route('/visualize/age_distribution', methods=['GET'])
