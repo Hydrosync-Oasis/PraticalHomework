@@ -140,5 +140,36 @@ def main():
     joblib.dump(rcv.best_estimator_, 'models/best_lung_cancer_model.pkl')
     print("模型已保存至 best_lung_cancer_model.pkl")
 
+    sample_data = pd.DataFrame({
+        'GENDER': ['F'],
+        'AGE': [60],
+        'SMOKING': [1],
+        'YELLOW_FINGERS': [1],
+        'ANXIETY': [1],
+        'PEER_PRESSURE': [1],
+        'CHRONIC DISEASE': [1],
+        'FATIGUE': [1],
+        'ALLERGY': [1],
+        'WHEEZING': [1],
+        'ALCOHOL CONSUMING': [1],
+        'COUGHING': [1],
+        'SHORTNESS OF BREATH': [1],
+        'SWALLOWING DIFFICULTY': [1],
+        'CHEST PAIN': [1]
+    }).copy()
+
+    sample_data.loc[:, 'AGE'] = scaler.transform(sample_data[['AGE']])
+    for col in sample_data.columns[2:]:
+        sample_data.loc[:, col] = sample_data[col] - 1
+    sample_data.loc[:, 'GENDER'] = sample_data['GENDER'].replace({'M': 1, 'F': 0})
+
+    loaded_model = joblib.load('models/best_lung_cancer_model.pkl')
+    sample_pred = loaded_model.predict(sample_data)
+    sample_proba = loaded_model.predict_proba(sample_data)[:, 1]
+    print(f"示例预测结果: {'肺癌' if sample_pred[0] == 1 else '非肺癌'}")
+    print(f"示例预测概率: {sample_proba[0]:.4f}")
+    print("示例数据（预处理后）：")
+    print(sample_data)
+
 if __name__ == "__main__":
     main()
