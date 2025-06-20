@@ -6,6 +6,25 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <script>
+      // 阻止ResizeObserver错误显示在页面上
+      window.addEventListener('error', function(event) {
+        if (event && event.message && event.message.includes('ResizeObserver')) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          return false;
+        }
+      }, true);
+
+      // 阻止unhandled rejection错误
+      window.addEventListener('unhandledrejection', function(event) {
+        if (event && event.reason && String(event.reason).includes('ResizeObserver')) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          return false;
+        }
+      });
+    </script>
   </head>
   <body>
     <noscript>
