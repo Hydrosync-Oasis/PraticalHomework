@@ -72,7 +72,7 @@ def main():
 
     # 画图，按需要选择传入df或df_plot
     plot_age_distribution(df_plot)
-    ###plot_categorical_counts(df_plot, cat_col)
+    plot_categorical_counts(df_plot, cat_col)
     plot_correlation_heatmap(df)              # 这里用纯数值df
     plot_gender_cancer_counts(df_plot)
     plot_age_group_stacked_bar(df_plot)
@@ -139,35 +139,6 @@ def main():
 
     joblib.dump(rcv.best_estimator_, 'models/best_lung_cancer_model.pkl')
     print("模型已保存至 best_lung_cancer_model.pkl")
-
-    sample_data = pd.DataFrame({
-        'GENDER': ['F'],
-        'AGE': [59],
-        'SMOKING': [1],
-        'YELLOW_FINGERS': [1],
-        'ANXIETY': [1],
-        'PEER_PRESSURE': [2],
-        'CHRONIC DISEASE': [1],
-        'FATIGUE': [2],
-        'ALLERGY': [1],
-        'WHEEZING': [2],
-        'ALCOHOL CONSUMING': [1],
-        'COUGHING': [2],
-        'SHORTNESS OF BREATH': [2],
-        'SWALLOWING DIFFICULTY': [1],
-        'CHEST PAIN': [2]
-    }).copy()
-
-    sample_data.loc[:, 'AGE'] = scaler.transform(sample_data[['AGE']])
-    for col in sample_data.columns[2:]:
-        sample_data.loc[:, col] = sample_data[col] - 1
-    sample_data.loc[:, 'GENDER'] = sample_data['GENDER'].replace({'M': 1, 'F': 0})
-
-    loaded_model = joblib.load('models/best_lung_cancer_model.pkl')
-    sample_pred = loaded_model.predict(sample_data)
-    print(f"示例预测结果: {'肺癌' if sample_pred[0] == 1 else '非肺癌'}")
-    print("示例数据（预处理后）：")
-    print(sample_data)
 
 if __name__ == "__main__":
     main()
