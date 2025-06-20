@@ -37,5 +37,8 @@
 
 img {
   width: 100px;
+  -webkit-user-drag: none; /* Chrome, Safari */
+  -moz-user-drag: none; /* Firefox */
+  -ms-user-drag: none; /* Internet Explorer */
 }
 </style>
