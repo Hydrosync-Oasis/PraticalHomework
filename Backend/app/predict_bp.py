@@ -28,10 +28,20 @@ def create_predict_bp(model_path='./models/best_lung_cancer_model.pkl', scaler_p
         "chest_pain": "CHEST PAIN"
     }
 
+    TRAIN_COLUMNS = [
+        "GENDER", "AGE", "SMOKING", "YELLOW_FINGERS", "ANXIETY",
+        "PEER_PRESSURE", "CHRONIC DISEASE", "FATIGUE", "ALLERGY",
+        "WHEEZING", "ALCOHOL CONSUMING", "COUGHING",
+        "SHORTNESS OF BREATH", "SWALLOWING DIFFICULTY", "CHEST PAIN"
+    ]
+
     def preprocess_input(data_dict):
-        # 转换字典键名为表头列名，只取模型训练时用的字段
+        # 映射字段名
         data_mapped = {COLUMN_MAP[k]: v for k, v in data_dict.items() if k in COLUMN_MAP}
-        df_input = pd.DataFrame([data_mapped])
+
+        # 保证顺序和训练一致，缺失项设默认值（例如 0）
+        ordered_data = {col: data_mapped.get(col, 0) for col in TRAIN_COLUMNS}
+        df_input = pd.DataFrame([ordered_data])
 
         # 性别映射 M=1, F=0
         df_input['GENDER'] = df_input['GENDER'].map({'M': 1, 'F': 0})
