@@ -26,12 +26,17 @@ from utils.visualize import (
 
 warnings.filterwarnings('ignore')
 
+from pathlib import Path
+
 def main():
     try:
-        df = pd.read_csv("E:\PraticalHomework\Backend\data\lung_cancer.csv")
+        base_dir = Path(__file__).resolve().parent
+        data_path = base_dir / 'data' / 'lung_cancer.csv'
+        df = pd.read_csv(data_path)
     except FileNotFoundError:
         print("错误：未找到数据文件 lung_cancer.csv，请确认文件路径是否正确。")
         return
+
 
     print("数据预览：")
     print(df.head())
@@ -129,7 +134,7 @@ def main():
     plt.legend(loc='lower right')
     plt.show()
 
-    joblib.dump(rcv.best_estimator_, './best_lung_cancer_model.pkl')
+    joblib.dump(rcv.best_estimator_, 'models/best_lung_cancer_model.pkl')
     print("模型已保存至 best_lung_cancer_model.pkl")
 
     sample_data = pd.DataFrame({
@@ -155,7 +160,7 @@ def main():
         sample_data.loc[:, col] = sample_data[col] - 1
     sample_data.loc[:, 'GENDER'] = sample_data['GENDER'].replace({'M': 1, 'F': 0})
 
-    loaded_model = joblib.load('./best_lung_cancer_model.pkl')
+    loaded_model = joblib.load('models/best_lung_cancer_model.pkl')
     sample_pred = loaded_model.predict(sample_data)
     print(f"示例预测结果: {'肺癌' if sample_pred[0] == 1 else '非肺癌'}")
     print("示例数据（预处理后）：")
