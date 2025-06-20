@@ -68,3 +68,4 @@ idea/
 vscode/
 
 # etc
+Backend/utils/__pycache__
