@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report, roc_curve, roc_auc_score
 
+# ✅ 设置中文支持
+plt.rcParams['font.family'] = 'SimHei'
+plt.rcParams['axes.unicode_minus'] = False
+
 
 def print_confusion_and_report(model, X_test, y_test):
     """

@@ -7,10 +7,15 @@ import warnings
 # 关闭警告提示，防止绘图时出现警告信息
 warnings.filterwarnings('ignore')
 
+# 设置中文支持（全局有效）
+plt.rcParams['font.family'] = 'SimHei'           # 显示中文
+plt.rcParams['axes.unicode_minus'] = False       # 显示负号正常
+
 # 设置整体画风和调色板
 plt.style.use('fivethirtyeight')
 colors = ['#011f4b', '#03396c', '#005b96', '#6497b1', '#b3cde0']
 sns.set_palette(sns.color_palette(colors))
+
 
 def plot_age_distribution(df):
     """
@@ -93,37 +98,45 @@ def plot_age_group_stacked_bar(df):
     plt.show()
 
 def plot_smoking_boxplot(df):
-    """
-    绘制肺癌患者中抽烟与不抽烟者年龄分布的箱型图
-    """
-    df_lc = df[df['LUNG_CANCER'] == 1]
-    smokers_age = df_lc[df_lc['SMOKING'] == 1]['AGE']
-    nonsmokers_age = df_lc[df_lc['SMOKING'] == 2]['AGE']
+    import matplotlib.pyplot as plt
+    import seaborn as sns
 
-    plt.figure(figsize=(8, 6))
-    plt.boxplot([smokers_age, nonsmokers_age], labels=['抽烟', '不抽烟'])
-    plt.ylabel('年龄')
-    plt.title('肺癌患者年龄分布：抽烟 vs 不抽烟（箱型图）')
-    plt.tight_layout()
+    plt.rcParams['font.family'] = 'SimHei'
+    plt.rcParams['axes.unicode_minus'] = False
+
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(data=df, x='SMOKING', y='AGE')
+    plt.title("吸烟与年龄的箱型图")
+    plt.xlabel("是否吸烟")
+    plt.ylabel("年龄")
     plt.show()
+
 
 def plot_sample_counts_before_after_sampling(df):
     """
     绘制采样前后肺癌与非肺癌患者数量对比柱状图
     """
+    import matplotlib.pyplot as plt
     from sklearn.utils import resample
 
+    # 设置中文字体
+    plt.rcParams['font.family'] = 'SimHei'
+    plt.rcParams['axes.unicode_minus'] = False
+
+    # 原始样本数统计（假设LUNG_CANCER为0和1）
     df_lung = df[df['LUNG_CANCER'] == 1]
     df_nonlung = df[df['LUNG_CANCER'] == 0]
 
     original_counts = {'肺癌-原始': len(df_lung), '非肺癌-原始': len(df_nonlung)}
 
-    # 过采样非肺癌患者至肺癌患者数量
+    # 过采样非肺癌患者至与肺癌数量一致
     df_nonlung_upsampled = resample(df_nonlung, replace=True, n_samples=len(df_lung), random_state=42)
     sampled_counts = {'肺癌-采样后': len(df_lung), '非肺癌-采样后': len(df_nonlung_upsampled)}
 
+    # 合并统计结果
     all_counts = {**original_counts, **sampled_counts}
 
+    # 画图
     plt.figure(figsize=(8, 6))
     plt.bar(all_counts.keys(), all_counts.values(),
             color=['#1f77b4', '#2ca02c', '#ff7f0e', '#9467bd'])
@@ -132,3 +145,4 @@ def plot_sample_counts_before_after_sampling(df):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
+

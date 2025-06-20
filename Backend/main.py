@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+import sys
+sys.stdout.reconfigure(encoding='utf-8')  # Python 3.7+
 import pandas as pd
 import numpy as np
 import warnings
@@ -66,7 +69,7 @@ def main():
     plot_gender_cancer_counts(df_plot)
     plot_age_group_stacked_bar(df_plot)
     plot_smoking_boxplot(df_plot)
-    plot_sample_counts_before_after_sampling(df_plot)
+    plot_sample_counts_before_after_sampling(df)
 
     X = df.drop(['LUNG_CANCER'], axis=1).copy()
     y = df['LUNG_CANCER']
