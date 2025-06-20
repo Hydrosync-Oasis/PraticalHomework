@@ -12,3 +12,23 @@ app.register_blueprint(predict_bp, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run(debug=True)
+from flask import Flask
+import joblib
+from app.predict_bp import create_predict_bp
+
+model = joblib.load('models/best_lung_cancer_model.pkl')
+scaler = joblib.load('models/scaler.pkl')
+
+app = Flask(__name__)
+
+# 注册 API 路由
+predict_bp = create_predict_bp(model, scaler)
+app.register_blueprint(predict_bp, url_prefix='/api')
+
+# 添加主页路由，避免 404
+@app.route('/')
+def home():
+    return 'Lung Cancer Prediction API is running. Visit /api/predict to use the model.'
+
+if __name__ == '__main__':
+    app.run(debug=True)
