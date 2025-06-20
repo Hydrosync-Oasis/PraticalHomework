@@ -1,174 +1,104 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.svm import SVC
-from sklearn.metrics import confusion_matrix, classification_report, roc_curve, roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score
 from imblearn.over_sampling import RandomOverSampler
 import joblib
 from pathlib import Path
 import warnings
 
-# 设置中文字体（SimHei 是常见中文黑体）
-plt.rcParams['font.family'] = 'SimHei'
-plt.rcParams['axes.unicode_minus'] = False
-
 def main():
     warnings.filterwarnings('ignore')
-    plt.style.use('fivethirtyeight')
-    colors = ['#011f4b', '#03396c', '#005b96', '#6497b1', '#b3cde0']
-    sns.set_palette(sns.color_palette(colors))
 
-    # 路径设置
     base_dir = Path(__file__).resolve().parent
     data_path = base_dir / 'data' / 'lung_cancer.csv'
     models_dir = base_dir / 'models'
     models_dir.mkdir(exist_ok=True)
 
-    # 读取数据
     try:
         df = pd.read_csv(data_path)
-        df.columns = df.columns.str.strip()  # ✅ 清理列名空格
+        df.columns = df.columns.str.strip()
     except FileNotFoundError:
-        print("❌ 错误：未找到数据文件 lung_cancer.csv，请确认 data 目录存在且文件在其中。")
+        print("错误：未找到数据文件 lung_cancer.csv")
         return
 
-    # 预期字段名检查（可选）
     expected_columns = ['GENDER', 'AGE', 'SMOKING', 'YELLOW_FINGERS', 'ANXIETY',
                         'PEER_PRESSURE', 'CHRONIC DISEASE', 'FATIGUE', 'ALLERGY',
                         'WHEEZING', 'ALCOHOL CONSUMING', 'COUGHING',
                         'SHORTNESS OF BREATH', 'SWALLOWING DIFFICULTY',
                         'CHEST PAIN', 'LUNG_CANCER']
     if set(expected_columns) != set(df.columns):
-        print("⚠️ 字段不匹配！")
-        print("当前字段：", df.columns.tolist())
+        print("字段不匹配：", df.columns.tolist())
         return
-
-    # 数据描述
-    print("非肺癌样本数量：", df[df['LUNG_CANCER'] == 'NO'].shape[0])
-    print("数据总维度：", df.shape)
-    df.info()
-    print(df.describe())
-
-    explore = df.describe().T
-    explore['R'] = explore['max'] - explore['min']
-    explore['IQR'] = explore['75%'] - explore['25%']
-    explore['cv'] = explore['std'] / explore['mean']
-    explore['std2'] = explore['std'] ** 2
-    explore['median'] = np.median(df['AGE'])
-    explore['mode'] = df['AGE'].mode()[0]
-    print(explore)
-
-    # 缺失值与重复值
-    print(df.isnull().sum())
-    print(df.duplicated().sum())
-    df.drop_duplicates(inplace=True)
 
     # 标签编码
     encoder = LabelEncoder()
     df['LUNG_CANCER'] = encoder.fit_transform(df['LUNG_CANCER'].str.strip())  # YES/NO -> 1/0
     df['GENDER'] = encoder.fit_transform(df['GENDER'].str.strip())  # M/F -> 1/0
 
-    # 分类变量列名（除 AGE 和 LUNG_CANCER）
-    cat_col = [col for col in df.columns if col not in ['AGE', 'LUNG_CANCER']]
+    # **对部分特征进行减1处理，使它们从{1,2}变为{0,1}**
+    cols_to_subtract_1 = ['SMOKING', 'YELLOW_FINGERS', 'ANXIETY', 'PEER_PRESSURE',
+                         'CHRONIC DISEASE', 'FATIGUE', 'ALLERGY', 'WHEEZING',
+                         'ALCOHOL CONSUMING', 'COUGHING', 'SHORTNESS OF BREATH',
+                         'SWALLOWING DIFFICULTY', 'CHEST PAIN']
+    for col in cols_to_subtract_1:
+        df[col] = df[col] - 1
 
-    # 可视化
-    fig, ax = plt.subplots(1, 3, figsize=(20, 6))
-    sns.histplot(df['AGE'], ax=ax[0], kde=True)
-    sns.histplot(data=df, x='AGE', hue='LUNG_CANCER', ax=ax[1], kde=True)
-    sns.boxplot(x='LUNG_CANCER', y='AGE', data=df, ax=ax[2])
-    plt.suptitle("Visualizing AGE column", size=20)
-    plt.show()
-
-    fig, ax = plt.subplots(len(cat_col), 2, figsize=(30, len(cat_col)*3))
-    for i, col in enumerate(cat_col):
-        sns.countplot(data=df, x=col, ax=ax[i, 0])
-        sns.countplot(data=df, x=col, hue='LUNG_CANCER', ax=ax[i, 1])
-    fig.tight_layout()
-    fig.subplots_adjust(top=0.95)
-    plt.suptitle("Visualizing Categorical Columns", fontsize=30)
-    plt.show()
-
-    # 相关性热力图
-    corr_matrix = df.corr()
-    mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
-    plt.figure(figsize=(10, 8))
-    sns.heatmap(corr_matrix, annot=True, fmt=".2f", mask=mask, cmap='coolwarm',
-                cbar_kws={'shrink': 0.3}, annot_kws={'size': 8})
-    plt.title("Feature Correlation Heatmap", fontsize=20)
-    plt.show()
-
-    target_corr = corr_matrix['LUNG_CANCER'].abs().sort_values(ascending=False)
-    print("\n相关性较强的特征：\n", target_corr[target_corr > 0.1])
-
-    # 特征处理
     X = df.drop('LUNG_CANCER', axis=1)
     y = df['LUNG_CANCER']
-    for col in X.columns:
-        if col not in ['GENDER', 'AGE']:
-            X[col] = X[col] - 1
 
-    # 过采样
+    # 过采样处理
     X_over, y_over = RandomOverSampler(random_state=42).fit_resample(X, y)
 
-    # 数据集划分
-    X_train, X_test, y_train, y_test = train_test_split(X_over, y_over, test_size=0.2, random_state=42, stratify=y_over)
+    # 划分训练测试集
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_over, y_over, test_size=0.2, random_state=42, stratify=y_over
+    )
 
-    # 分布图
-    plt.figure(figsize=(15, 15))
-    for i, feature in enumerate(X_train.columns, 1):
-        plt.subplot(len(X_train.columns)//3+1, 3, i)
-        sns.kdeplot(X_train[feature], color='blue', label='Train')
-        sns.kdeplot(X_test[feature], color='red', label='Test')
-        plt.title(f'Distribution of {feature}')
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
-
-    # 标准化
+    # 标准化 AGE
     scaler = StandardScaler()
     X_train['AGE'] = scaler.fit_transform(X_train[['AGE']])
     X_test['AGE'] = scaler.transform(X_test[['AGE']])
 
-    # 模型训练
-    param_grid = {
-        'C': [0.001, 0.01, 0.1, 1, 10, 100],
-        'gamma': [0.001, 0.01, 0.1, 1, 10, 100]
-    }
-    svc = SVC(probability=True, random_state=42)
-    rcv = RandomizedSearchCV(svc, param_grid, n_iter=10, cv=5, random_state=42)
-    rcv.fit(X_train, y_train)
+    # 使用随机森林 + 概率校准
+    rf = RandomForestClassifier(n_estimators=100, random_state=42)
+    calibrated_clf = CalibratedClassifierCV(rf, cv=5)
+    calibrated_clf.fit(X_train, y_train)
 
     # 模型评估
-    y_pred = rcv.predict(X_test)
-    print("最佳参数:", rcv.best_params_)
-    print(classification_report(y_test, y_pred))
-    sns.heatmap(confusion_matrix(y_test, y_pred), annot=True, fmt='d', cmap='Blues')
-    plt.title("混淆矩阵")
-    plt.xlabel("预测值")
-    plt.ylabel("真实值")
-    plt.show()
+    y_pred = calibrated_clf.predict(X_test)
+    y_proba = calibrated_clf.predict_proba(X_test)[:, 1]
+    print("分类报告：\n", classification_report(y_test, y_pred))
+    print("混淆矩阵：\n", confusion_matrix(y_test, y_pred))
+    print(f"ROC AUC: {roc_auc_score(y_test, y_proba):.4f}")
 
-    # ROC 曲线
-    y_proba = rcv.predict_proba(X_test)[:, 1]
-    fpr, tpr, _ = roc_curve(y_test, y_proba)
-    auc = roc_auc_score(y_test, y_proba)
-    plt.figure(figsize=(6, 6))
-    plt.plot(fpr, tpr, label=f"AUC = {auc:.3f}")
-    plt.plot([0, 1], [0, 1], 'k--')
-    plt.xlabel("假阳性率")
-    plt.ylabel("真阳性率")
-    plt.title("ROC Curve")
-    plt.legend()
-    plt.show()
-
-    # 保存模型和Scaler
-    joblib.dump(rcv.best_estimator_, models_dir / 'best_lung_cancer_model.pkl')
+    # 保存模型和标准化器
+    joblib.dump(calibrated_clf, models_dir / 'best_lung_cancer_model.pkl')
     joblib.dump(scaler, models_dir / 'scaler.pkl')
-    print("✅ 模型和标准化器已保存到 models/ 目录。")
-    print("训练时特征列名:", X.columns.tolist())
+    print("模型和标准化器已保存到 models/ 目录。")
+
+    # 测试样本
+    test_samples = [
+        [1, 70, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+    df_test = pd.DataFrame(test_samples, columns=X.columns)
+
+    # 同样对测试数据做减1处理
+    for col in cols_to_subtract_1:
+        df_test[col] = df_test[col] - 1
+
+    # 标准化 AGE
+    df_test['AGE'] = scaler.transform(df_test[['AGE']])
+
+    print(">>> 测试样本预测结果：")
+    for i, row in df_test.iterrows():
+        pred = calibrated_clf.predict([row])[0]
+        proba = calibrated_clf.predict_proba([row])[0, 1]
+        label = "肺癌" if pred == 1 else "非肺癌"
+        print(f"样本{i}预测结果：{label}，肺癌概率：{proba:.4f}")
 
 if __name__ == "__main__":
     main()
