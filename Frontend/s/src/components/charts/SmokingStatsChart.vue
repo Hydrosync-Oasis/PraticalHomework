@@ -11,36 +11,6 @@
     />
 
     <chart-wrapper 
-      v-if="showAll && stackBarOption && Object.keys(stackBarOption).length > 0"
-      title="各年龄段吸烟情况" 
-      subtitle="各年龄组吸烟与不吸烟对比"
-      intro="该图表展示了不同年龄段人群中吸烟者与非吸烟者的分布情况及比例。柱状图显示各年龄段吸烟和不吸烟的人数，折线图表示各年龄段的吸烟比例。可以观察到不同年龄段吸烟习惯的差异。"
-      :option="stackBarOption" 
-      :loading="loading"
-      :error="false"
-      height="400px">
-      <template #data-table>
-        <div class="data-summary" v-if="chartData && chartData.smokingByAge">
-          <h4>年龄段吸烟情况统计</h4>
-          <el-table :data="chartData.smokingByAge" stripe style="width: 100%" :border="true" size="small">
-            <el-table-column prop="ageGroup" label="年龄段" width="120" />
-            <el-table-column prop="smoking" label="吸烟人数" width="120" />
-            <el-table-column prop="nonSmoking" label="不吸烟人数" width="120" />
-            <el-table-column prop="total" label="总人数" width="120" />
-            <el-table-column prop="smokingPercent" label="吸烟比例">
-              <template #default="scope">
-                <div class="ratio-cell">
-                  <span>{{ scope.row.smokingPercent }}%</span>
-                  <div class="ratio-bar" :style="{width: scope.row.smokingPercent + '%', backgroundColor: '#f39c12'}"></div>
-                </div>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </template>
-    </chart-wrapper>
-      
-    <chart-wrapper 
       v-if="showAll && barChartOption && Object.keys(barChartOption).length > 0"
       title="吸烟与肺癌关系" 
       subtitle="吸烟者与非吸烟者肺癌对比"
@@ -62,6 +32,36 @@
                 <div class="ratio-cell">
                   <span>{{ scope.row.cancerRatio }}%</span>
                   <div class="ratio-bar" :style="{width: scope.row.cancerRatio + '%', backgroundColor: scope.row.category === '吸烟' ? '#e74c3c' : '#f39c12'}"></div>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </template>
+    </chart-wrapper>
+      
+    <chart-wrapper 
+      v-if="showAll && stackBarOption && Object.keys(stackBarOption).length > 0"
+      title="各年龄段吸烟情况" 
+      subtitle="各年龄组吸烟与不吸烟对比"
+      intro="该图表展示了不同年龄段人群中吸烟者与非吸烟者的分布情况及比例。柱状图显示各年龄段吸烟和不吸烟的人数，折线图表示各年龄段的吸烟比例。可以观察到不同年龄段吸烟习惯的差异。"
+      :option="stackBarOption" 
+      :loading="loading"
+      :error="false"
+      height="400px">
+      <template #data-table>
+        <div class="data-summary" v-if="chartData && chartData.smokingByAge">
+          <h4>年龄段吸烟情况统计</h4>
+          <el-table :data="chartData.smokingByAge" stripe style="width: 100%" :border="true" size="small">
+            <el-table-column prop="ageGroup" label="年龄段" width="120" />
+            <el-table-column prop="smoking" label="吸烟人数" width="120" />
+            <el-table-column prop="nonSmoking" label="不吸烟人数" width="120" />
+            <el-table-column prop="total" label="总人数" width="120" />
+            <el-table-column prop="smokingPercent" label="吸烟比例">
+              <template #default="scope">
+                <div class="ratio-cell">
+                  <span>{{ scope.row.smokingPercent }}%</span>
+                  <div class="ratio-bar" :style="{width: scope.row.smokingPercent + '%', backgroundColor: '#f39c12'}"></div>
                 </div>
               </template>
             </el-table-column>
@@ -135,7 +135,7 @@ const barChartOption = computed(() => {
         formatter: function(params) {
           const category = params[0].axisValue;
           const cancerCount = params[0].data;
-          const nonCancerCount = params[1].data;
+          const nonCancerCount = params[1] ? params[1].data : 0;
           const total = cancerCount + nonCancerCount;
           const ratio = (cancerCount / total * 100).toFixed(1);
           return `${category}<br/>
@@ -144,15 +144,40 @@ const barChartOption = computed(() => {
                  总计: ${total} 人`;
         }
       },
-      legend: {
-        data: ['肺癌患者', '非肺癌患者'],
-        top: 10,
-        left: 'center'
-      },
+      legend: [
+        {
+          // 柱状图图例
+          data: ['肺癌患者', '非肺癌患者'],
+          top: 10,
+          left: '20%', // 更靠左一些
+          textStyle: {
+            fontSize: 12,
+            fontWeight: 'bold' // 加粗以区分
+          }
+        },
+        {
+          // 饼图图例
+          data: ['吸烟肺癌患者', '吸烟非肺癌患者', '不吸烟肺癌患者', '不吸烟非肺癌患者'],
+          top: 10, // 放在顶部
+          right: '5%', // 使用right定位，确保不会超出右侧边界
+          orient: 'vertical', // 纵向排列
+          align: 'left', // 左对齐
+          itemWidth: 14,
+          itemHeight: 14,
+          itemGap: 5, // 紧凑间距
+          textStyle: {
+            fontSize: 11,
+            color: '#666' // 稍微区分颜色
+          },
+          formatter: function(name) {
+            return name;
+          }
+        }
+      ],
       grid: {
         left: '3%',
-        right: '4%',
-        bottom: '10%',
+        right: '55%', // 留出右侧空间给饼图
+        bottom: '20%', // 增加更多底部空间
         top: '70px',
         containLabel: true
       },
@@ -168,7 +193,9 @@ const barChartOption = computed(() => {
       yAxis: [
         {
           type: 'value',
-          name: '人数'
+          name: '人数',
+          max: 180,
+          interval: 30
         }
       ],
       series: [
@@ -197,6 +224,52 @@ const barChartOption = computed(() => {
             color: '#2ecc71'
           },
           barWidth: '40%'
+        },
+        // 添加饼图
+        {
+          name: '肺癌患病分布',
+          type: 'pie',
+          radius: ['30%', '50%'], // 稍微缩小饼图
+          center: ['75%', '55%'], // 饼图向下移动，避免与图例重叠
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 5,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: true,
+            position: 'outside',
+            formatter: '{b}\n{c}',  // 同时显示名称和数值
+            fontSize: 12,
+            lineHeight: 18,
+            backgroundColor: 'rgba(255,255,255,0.7)',
+            padding: [4, 8],
+            borderRadius: 4
+          },
+          labelLine: {
+            show: true,
+            length: 12,
+            length2: 15,
+            smooth: 0.5, // 增加平滑度
+            lineStyle: {
+              width: 1.5,
+              type: 'solid'
+            }
+          },
+          data: [
+            {value: cancer[0], name: '吸烟肺癌患者', itemStyle: {color: '#C23531'}},
+            {value: nonCancer[0], name: '吸烟非肺癌患者', itemStyle: {color: '#61A0A8'}},
+            {value: cancer[1], name: '不吸烟肺癌患者', itemStyle: {color: '#D48265'}},
+            {value: nonCancer[1], name: '不吸烟非肺癌患者', itemStyle: {color: '#91C7AE'}}
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
         }
       ]
     }

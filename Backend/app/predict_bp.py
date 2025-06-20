@@ -2,25 +2,6 @@ from flask import Blueprint, request, jsonify
 import pandas as pd
 import joblib
 
-# 训练模型时使用的特征顺序
-FEATURE_ORDER = [
-    'GENDER',
-    'AGE',
-    'SMOKING',
-    'YELLOW_FINGERS',
-    'ANXIETY',
-    'PEER_PRESSURE',
-    'CHRONIC DISEASE',
-    'FATIGUE',
-    'ALLERGY',
-    'WHEEZING',
-    'ALCOHOL CONSUMING',
-    'COUGHING',
-    'SHORTNESS OF BREATH',
-    'SWALLOWING DIFFICULTY',
-    'CHEST PAIN'
-]
-
 def create_predict_bp(model_path='./models/best_lung_cancer_model.pkl', scaler_path='./models/scaler.pkl'):
     predict_bp = Blueprint('predict_bp', __name__)
 
@@ -62,10 +43,6 @@ def create_predict_bp(model_path='./models/best_lung_cancer_model.pkl', scaler_p
 
         # 年龄标准化
         df_input['AGE'] = scaler.transform(df_input[['AGE']])
-
-        # 按训练时的特征顺序排列
-        df_input = df_input[FEATURE_ORDER]
-
         return df_input
 
     @predict_bp.route('/predict', methods=['POST'])
@@ -78,8 +55,6 @@ def create_predict_bp(model_path='./models/best_lung_cancer_model.pkl', scaler_p
 
             processed = preprocess_input(data)
             print("预处理后数据：\n", processed)
-            print("列顺序检查：", processed.columns.tolist() == FEATURE_ORDER)
-            print("当前列顺序：", processed.columns.tolist())
 
             pred = model.predict(processed)
             print("预测结果：", pred)

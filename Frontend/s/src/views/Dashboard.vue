@@ -5,19 +5,19 @@
       <p class="dashboard-description">该系统基于多维度数据分析，展示肺癌与各种因素的相关性，包括年龄、性别、吸烟习惯等，帮助医生和研究人员更好地理解肺癌发病规律。</p>
       <div class="header-stats">
         <div class="stat-item">
-          <div class="stat-value">329</div>
+          <div class="stat-value">309</div>
           <div class="stat-label">总样本数</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">155</div>
+          <div class="stat-value">270</div>
           <div class="stat-label">肺癌样本</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">174</div>
+          <div class="stat-value">39</div>
           <div class="stat-label">非肺癌样本</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">47.1%</div>
+          <div class="stat-value">87.4%</div>
           <div class="stat-label">肺癌比例</div>
         </div>
       </div>
