@@ -11,12 +11,6 @@ import joblib
 from pathlib import Path
 import warnings
 
-# 设置中文字体（SimHei 是常见中文黑体）
-plt.rcParams['font.family'] = 'SimHei'
-
-# 正常显示负号
-plt.rcParams['axes.unicode_minus'] = False
-
 def main():
     warnings.filterwarnings('ignore')
     plt.style.use('fivethirtyeight')
@@ -161,7 +155,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
