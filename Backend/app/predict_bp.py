@@ -6,7 +6,20 @@ def create_predict_bp(model, scaler):
 
     def preprocess_input(data_dict):
         df_input = pd.DataFrame([data_dict])
-        df_input.columns = df_input.columns.str.upper()  # 👈 添加这一行，兼容小写字段
+        df_input.columns = df_input.columns.str.upper()  # 👈 兼容小写字段
+
+        # ✅ 映射列名（将带下划线的列名转换为训练时的空格风格）
+        column_mapping = {
+            "ALCOHOL_CONSUMING": "ALCOHOL CONSUMING",
+            "CHEST_PAIN": "CHEST PAIN",
+            "CHRONIC_DISEASE": "CHRONIC DISEASE",
+            "SHORTNESS_OF_BREATH": "SHORTNESS OF BREATH",
+            "SWALLOWING_DIFFICULTY": "SWALLOWING DIFFICULTY",
+            "YELLOW_FINGERS": "YELLOW FINGERS",
+            "PEER_PRESSURE": "PEER PRESSURE"
+            # 如有更多列名，也可以继续添加
+        }
+        df_input.rename(columns=column_mapping, inplace=True)
 
         df_input['GENDER'] = df_input['GENDER'].map({'M': 1, 'F': 0})
         for col in df_input.columns:
