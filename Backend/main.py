@@ -142,20 +142,20 @@ def main():
 
     sample_data = pd.DataFrame({
         'GENDER': ['F'],
-        'AGE': [60],
+        'AGE': [59],
         'SMOKING': [1],
         'YELLOW_FINGERS': [1],
         'ANXIETY': [1],
-        'PEER_PRESSURE': [1],
+        'PEER_PRESSURE': [2],
         'CHRONIC DISEASE': [1],
-        'FATIGUE': [1],
+        'FATIGUE': [2],
         'ALLERGY': [1],
-        'WHEEZING': [1],
+        'WHEEZING': [2],
         'ALCOHOL CONSUMING': [1],
-        'COUGHING': [1],
-        'SHORTNESS OF BREATH': [1],
+        'COUGHING': [2],
+        'SHORTNESS OF BREATH': [2],
         'SWALLOWING DIFFICULTY': [1],
-        'CHEST PAIN': [1]
+        'CHEST PAIN': [2]
     }).copy()
 
     sample_data.loc[:, 'AGE'] = scaler.transform(sample_data[['AGE']])
