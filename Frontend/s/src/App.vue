@@ -3,8 +3,8 @@
     <LogoHeader />
     <div class="main-wrapper">
       <SideMenu />
-      <main class="content-area">
-        <router-view />
+      <main class="content-area" style="width: 100%">
+        <router-view style="width: 100%"/>
       </main>
     </div>
   </div>
