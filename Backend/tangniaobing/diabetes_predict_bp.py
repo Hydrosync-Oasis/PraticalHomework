@@ -14,12 +14,23 @@ diabetes_predict_bp = Blueprint('diabetes_predict_bp', __name__)
 def predict_1():
     try:
         data = request.json
-        samples = data.get("samples", [])
+        samples = data.get("samples", None)
 
-        if not samples or not isinstance(samples, list):
-            return jsonify({"error": "请输入有效的测试样本列表。"}), 400
+        if samples is None:
+            return jsonify({"error": "请输入有效的测试样本。"}), 400
+
+        # 如果是单个样本 dict，转换为列表包裹
+        if isinstance(samples, dict):
+            samples = [samples]
+        elif not isinstance(samples, list):
+            return jsonify({"error": "samples 应为字典或列表类型。"}), 400
 
         results = predict_samples(samples)
         return jsonify(results)
+
     except Exception as e:
-        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+        return jsonify({
+            "error": str(e),
+            "trace": traceback.format_exc()
+        }), 500
+
