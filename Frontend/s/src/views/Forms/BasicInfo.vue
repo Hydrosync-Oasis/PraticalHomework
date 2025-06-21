@@ -18,8 +18,10 @@
             </el-form-item>
 
             <el-form-item label="年龄" class="item">
-                <Field name="age" v-slot="{ field }">
-                    <el-input v-bind="field" v-model="field.value" placeholder="请输入年龄" />
+                <Field name="age" v-slot="{ field }" as="div">
+                    <el-input-number :min="0" :max="150"
+                        v-bind:model-value="field.value"  v-bind="field" placeholder="请输入年龄"
+                        style="width: 170px;" />
                 </Field>
                 <div class="msg">
                     <ErrorMessage name="age" />

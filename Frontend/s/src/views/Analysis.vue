@@ -55,9 +55,6 @@ function F(values) {
             if (typeof data[item] === 'boolean') {
                 data[item] = data[item] ? 2 : 1;
             }
-            if (!isNaN(Number(data[item]))) {
-                data[item] = Number(data[item]);
-            }
         }
         PredictLungCancer(data).then(
             (res) => {

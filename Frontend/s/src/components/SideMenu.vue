@@ -1,42 +1,52 @@
 <template>
-  <el-menu
-    :default-active="activePath"
-    router
-    class="side-menu"
-    background-color="#212121"
-    text-color="#fff"
-    active-text-color="#409EFF"
-    :unique-opened="true"
-  >
+  <el-menu :default-active="activePath" router class="side-menu" background-color="#212121" text-color="#fff"
+    active-text-color="#409EFF" :unique-opened="true">
     <el-sub-menu index="/dashboard">
       <template #title>
-        <el-icon><HomeFilled /></el-icon>
+        <el-icon>
+          <HomeFilled />
+        </el-icon>
         <span>可视化展示</span>
       </template>
-      <el-menu-item index="/dashboard/age">
-        <el-icon><Calendar /></el-icon>
-        <span>年龄分析</span>
-      </el-menu-item>
-      <el-menu-item index="/dashboard/gender">
-        <el-icon><User /></el-icon>
-        <span>性别分析</span>
-      </el-menu-item>
-      <el-menu-item index="/dashboard/correlation">
-        <el-icon><Connection /></el-icon>
-        <span>相关性分析</span>
-      </el-menu-item>
-      <el-menu-item index="/dashboard/smoking">
-        <el-icon><Smoking /></el-icon>
-        <span>吸烟分析</span>
-      </el-menu-item>
+      <el-menu-item-group title="肺癌数据分析可视化">
+        <el-menu-item index="/dashboard/age">
+          <el-icon>
+            <Calendar />
+          </el-icon>
+          <span>年龄分析</span>
+        </el-menu-item>
+        <el-menu-item index="/dashboard/gender">
+          <el-icon>
+            <User />
+          </el-icon>
+          <span>性别分析</span>
+        </el-menu-item>
+        <el-menu-item index="/dashboard/correlation">
+          <el-icon>
+            <Connection />
+          </el-icon>
+          <span>相关性分析</span>
+        </el-menu-item>
+        <el-menu-item index="/dashboard/smoking">
+          <el-icon>
+            <Smoking />
+          </el-icon>
+          <span>吸烟分析</span>
+        </el-menu-item>
+
+      </el-menu-item-group>
     </el-sub-menu>
     <el-menu-item index="/analysis">
-      <el-icon><DataAnalysis /></el-icon>
-      <span>分析预测</span>
+      <el-icon>
+        <DataAnalysis />
+      </el-icon>
+      <span>肺癌预测</span>
     </el-menu-item>
     <el-menu-item index="/diabetes">
-      <el-icon><DataAnalysis /></el-icon>
-      <span>糖尿病分析预测</span>
+      <el-icon>
+        <DataAnalysis />
+      </el-icon>
+      <span>糖尿病预测</span>
     </el-menu-item>
   </el-menu>
 </template>
