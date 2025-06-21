@@ -8,7 +8,6 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 import joblib  # 用于模型保存和加载
 import os
 
-
 # 全局变量
 scaler = StandardScaler()
 model = LogisticRegression()
@@ -89,26 +88,32 @@ def predict_samples(samples, model_path=None, scaler_path=None):
 
     processed_samples = []
 
-    # 保证前端单个样本也能作为列表传入
+    # 兼容前端传入单个样本（dict）或多个样本（list）
     if isinstance(samples, dict):
         samples = [samples]
+    elif not isinstance(samples, list):
+        raise ValueError("输入格式错误，应为 dict 或 list。")
 
-    # 转换每个样本字段为模型要求的顺序和格式
     for sample_dict in samples:
         converted_sample = {}
         for key, value in sample_dict.items():
             mapped_key = FIELD_MAP.get(key.lower())
             if mapped_key:
                 converted_sample[mapped_key] = value
+
+        # 如果某些字段缺失，补0
         row = [float(converted_sample.get(feat, 0)) for feat in FEATURE_ORDER]
         processed_samples.append(row)
 
+    # 转为 NumPy 数组并标准化
     test_samples = np.array(processed_samples)
     test_samples_scaled = scaler.transform(test_samples)
 
+    # 模型预测
     predictions = model.predict(test_samples_scaled)
     probabilities = model.predict_proba(test_samples_scaled)[:, 1]
 
+    # 返回结果
     results = []
     for i, (pred, prob) in enumerate(zip(predictions, probabilities), 1):
         result = "糖尿病" if pred == 1 else "未患糖尿病"
@@ -119,5 +124,3 @@ def predict_samples(samples, model_path=None, scaler_path=None):
         })
 
     return results
-
-

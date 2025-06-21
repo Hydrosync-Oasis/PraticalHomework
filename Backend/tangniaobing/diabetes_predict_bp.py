@@ -13,17 +13,21 @@ diabetes_predict_bp = Blueprint('diabetes_predict_bp', __name__)
 @diabetes_predict_bp.route('/predict_1', methods=['POST'])
 def predict_1():
     try:
-        data = request.json
-        samples = data.get("samples", None)
+        data = request.json  # 获取请求体
 
-        if samples is None:
-            return jsonify({"error": "请输入有效的测试样本。"}), 400
+        if data is None:
+            return jsonify({"error": "请求体不能为空"}), 400
 
-        # 如果是单个样本 dict，转换为列表包裹
-        if isinstance(samples, dict):
-            samples = [samples]
-        elif not isinstance(samples, list):
-            return jsonify({"error": "samples 应为字典或列表类型。"}), 400
+        # 支持单个样本 dict，或者多个样本 list
+        if isinstance(data, dict):
+            samples = [data]  # 单个样本，包装成列表
+        elif isinstance(data, list):
+            samples = data  # 多个样本直接用
+            # 验证列表中每项都是 dict
+            if not all(isinstance(item, dict) for item in samples):
+                return jsonify({"error": "列表中所有样本应为字典格式"}), 400
+        else:
+            return jsonify({"error": "请求体应为样本字典或样本字典列表"}), 400
 
         results = predict_samples(samples)
         return jsonify(results)
@@ -33,4 +37,6 @@ def predict_1():
             "error": str(e),
             "trace": traceback.format_exc()
         }), 500
+
+
 
