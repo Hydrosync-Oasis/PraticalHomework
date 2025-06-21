@@ -15,7 +15,7 @@ def train():
 
 
 @app.route('/predict', methods=['POST'])
-def predict():
+def predict_1():
     try:
         data = request.json
         samples = data.get("samples", [])
