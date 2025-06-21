@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from Backend.diabetes_model import train_model, predict_samples
+from Backend.tangniaobing.diabetes_model import train_model, predict_samples
 import traceback
 
 app = Flask(__name__)

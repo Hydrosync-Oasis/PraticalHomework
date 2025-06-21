@@ -1,4 +1,4 @@
-from Backend.diabetes_model import train_model, predict_samples
+from Backend.tangniaobing.diabetes_model import train_model, predict_samples
 import matplotlib
 
 
