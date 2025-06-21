@@ -60,6 +60,10 @@ def train_model(data_path="diabetes.csv", model_path="diabetes_model.pkl", scale
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
 
+import os
+import joblib
+import numpy as np
+
 def predict_samples(samples, model_path=None, scaler_path=None):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 当前文件所在目录
     if model_path is None:
@@ -71,15 +75,29 @@ def predict_samples(samples, model_path=None, scaler_path=None):
     model = joblib.load(model_path)
     scaler = joblib.load(scaler_path)
 
-    # 转为NumPy数组并标准化
-    test_samples = np.array(samples)
+    # 定义训练时用的特征顺序，确保与训练一致
+    FEATURE_ORDER = ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
+                     "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]
+
+    # 如果 samples 是 dict 类型的列表，需要转换成二维数值数组
+    if isinstance(samples, list) and len(samples) > 0 and isinstance(samples[0], dict):
+        processed_samples = []
+        for sample_dict in samples:
+            # 按特征顺序取值，缺失用0代替
+            row = [float(sample_dict.get(feat, 0)) for feat in FEATURE_ORDER]
+            processed_samples.append(row)
+        test_samples = np.array(processed_samples)
+    else:
+        # 直接转为 numpy 数组（假设是列表列表）
+        test_samples = np.array(samples)
+
+    # 标准化
     test_samples_scaled = scaler.transform(test_samples)
 
-    # 模型预测
+    # 预测
     predictions = model.predict(test_samples_scaled)
     probabilities = model.predict_proba(test_samples_scaled)[:, 1]
 
-    # 返回结果
     results = []
     for i, (pred, prob) in enumerate(zip(predictions, probabilities), 1):
         result = "糖尿病" if pred == 1 else "未患糖尿病"
@@ -88,5 +106,7 @@ def predict_samples(samples, model_path=None, scaler_path=None):
             "预测结果": result,
             "概率": round(prob, 2)
         })
+
     return results
+
 
