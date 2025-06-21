@@ -1,8 +1,8 @@
 <template>
   <el-menu
     :default-active="activePath"
-    class="side-menu"
     router
+    class="side-menu"
     background-color="#212121"
     text-color="#fff"
     active-text-color="#409EFF"
@@ -34,9 +34,9 @@
       <el-icon><DataAnalysis /></el-icon>
       <span>分析预测</span>
     </el-menu-item>
-    <el-menu-item index="/settings">
-      <el-icon><Setting /></el-icon>
-      <span>模型训练</span>
+    <el-menu-item index="/diabetes">
+      <el-icon><DataAnalysis /></el-icon>
+      <span>糖尿病分析预测</span>
     </el-menu-item>
   </el-menu>
 </template>
@@ -60,14 +60,6 @@ const activePath = computed(() => route.path)
   user-select: none;
   overflow: hidden; /* 侧栏不滚动！ */
   box-shadow: 4px 0px 10px 0 rgba(0, 0, 0, 0.6);
-}
-
-:deep(.el-sub-menu__title) {
-  padding-left: 20px !important;
-}
-
-:deep(.el-menu-item) {
-  padding-left: 40px !important;
 }
 
 :deep(.el-sub-menu .el-menu-item) {
