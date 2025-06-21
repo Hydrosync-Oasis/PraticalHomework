@@ -60,12 +60,8 @@ def train_model(data_path="diabetes.csv", model_path="diabetes_model.pkl", scale
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
 
-import os
-import joblib
-import numpy as np
-
 def predict_samples(samples, model_path=None, scaler_path=None):
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 当前文件所在目录
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     if model_path is None:
         model_path = os.path.join(BASE_DIR, "diabetes_model.pkl")
     if scaler_path is None:
@@ -75,26 +71,41 @@ def predict_samples(samples, model_path=None, scaler_path=None):
     model = joblib.load(model_path)
     scaler = joblib.load(scaler_path)
 
-    # 定义训练时用的特征顺序，确保与训练一致
+    # 模型训练时使用的特征顺序（大小写敏感）
     FEATURE_ORDER = ["Pregnancies", "Glucose", "BloodPressure", "SkinThickness",
                      "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"]
 
-    # 如果 samples 是 dict 类型的列表，需要转换成二维数值数组
-    if isinstance(samples, list) and len(samples) > 0 and isinstance(samples[0], dict):
-        processed_samples = []
-        for sample_dict in samples:
-            # 按特征顺序取值，缺失用0代替
-            row = [float(sample_dict.get(feat, 0)) for feat in FEATURE_ORDER]
-            processed_samples.append(row)
-        test_samples = np.array(processed_samples)
-    else:
-        # 直接转为 numpy 数组（假设是列表列表）
-        test_samples = np.array(samples)
+    # 定义字段映射（前端小写字段 -> 模型字段）
+    FIELD_MAP = {
+        "pregnancies": "Pregnancies",
+        "glucose": "Glucose",
+        "blood_pressure": "BloodPressure",
+        "skin_thickness": "SkinThickness",
+        "insulin": "Insulin",
+        "bmi": "BMI",
+        "diabetes_pedigree_function": "DiabetesPedigreeFunction",
+        "age": "Age"
+    }
 
-    # 标准化
+    processed_samples = []
+
+    # 保证前端单个样本也能作为列表传入
+    if isinstance(samples, dict):
+        samples = [samples]
+
+    # 转换每个样本字段为模型要求的顺序和格式
+    for sample_dict in samples:
+        converted_sample = {}
+        for key, value in sample_dict.items():
+            mapped_key = FIELD_MAP.get(key.lower())
+            if mapped_key:
+                converted_sample[mapped_key] = value
+        row = [float(converted_sample.get(feat, 0)) for feat in FEATURE_ORDER]
+        processed_samples.append(row)
+
+    test_samples = np.array(processed_samples)
     test_samples_scaled = scaler.transform(test_samples)
 
-    # 预测
     predictions = model.predict(test_samples_scaled)
     probabilities = model.predict_proba(test_samples_scaled)[:, 1]
 
