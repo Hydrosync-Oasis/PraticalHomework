@@ -10,7 +10,7 @@ from diabetes_model import predict_samples
 
 diabetes_predict_bp = Blueprint('diabetes_predict_bp', __name__)
 
-@diabetes_predict_bp.route('/predict_1', methods=['POST'])
+@diabetes_predict_bp.route('/api/predict_diabetes', methods=['POST'])
 def predict_1():
     try:
         data = request.json  # 获取请求体

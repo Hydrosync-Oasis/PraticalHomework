@@ -5,3 +5,7 @@ export function PredictLungCancer(data) {
     return axios.post('/predict', data)
 }
 
+export function PredictDiabetes(data) {
+    return axios.post('/predict_diabetes', data)
+}
+

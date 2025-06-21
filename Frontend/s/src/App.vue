@@ -7,7 +7,7 @@
       </div>
       <main class="content-area">
         <router-view v-slot="{ Component }">
-          <keep-alive exclude="Analysis">
+          <keep-alive exclude="Analysis,Diabetes">
             <component :is="Component" />
           </keep-alive>
         </router-view>
