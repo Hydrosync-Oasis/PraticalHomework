@@ -14,12 +14,12 @@
         :percentage="probabilityPercent"
         :color="probabilityColor"
         :stroke-width="18"
-        status="success"
+        status="error"
         :text-inside="true"
       >
       </el-progress>
       <span class="probability-text">
-        预测概率：{{ probabilityPercent }}%
+        患病概率：{{ probabilityPercent }}%
       </span>
     </div>
   </el-card>

@@ -16,8 +16,7 @@
             <div class="form">
                 <div v-if="index === components.length - 1">
                     <ResultCard :prediction="result.prediction" :prediction-label="result['prediction_label']"
-                        :probability="result.probability"
-                        style="margin: 20px;">
+                        :probability="result.probability" style="margin: 20px;">
 
                     </ResultCard>
                 </div>
@@ -50,9 +49,9 @@ function F(values) {
 
     if (index.value === components.length - 1) {
         // axios
-        const data = { };
+        const data = {};
         Object.assign(data, ...formsData);
-        for(let item of Object.keys(data)) {
+        for (let item of Object.keys(data)) {
             if (typeof data[item] === 'boolean') {
                 data[item] = data[item] ? 2 : 1;
             }
@@ -74,6 +73,7 @@ function F(values) {
 .form {
     width: 30%;
     min-width: 580px;
+    margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
     border: 2px gray;
