@@ -1,5 +1,11 @@
 from flask import Blueprint, request, jsonify
 import traceback
+import sys
+import os
+
+# 添加当前文件目录到 sys.path，确保能找到同目录的 diabetes_model.py
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from diabetes_model import predict_samples
 
 diabetes_predict_bp = Blueprint('diabetes_predict_bp', __name__)

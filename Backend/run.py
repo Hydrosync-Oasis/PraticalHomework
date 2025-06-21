@@ -23,13 +23,7 @@ app.register_blueprint(predict_bp, url_prefix='/api')
 analysis_bp = create_analysis_bp()
 app.register_blueprint(analysis_bp, url_prefix='/api/analysis')
 
-@app.route('/train', methods=['POST'])
-def train():
-    try:
-        train_model()
-        return jsonify({"message": "糖尿病模型训练完成并已保存。"})
-    except Exception as e:
-        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
+
 
 @app.route('/')
 def home():
