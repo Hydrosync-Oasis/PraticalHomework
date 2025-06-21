@@ -6,6 +6,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_curve, auc
 import joblib  # 用于模型保存和加载
+import os
+
 
 # 全局变量
 scaler = StandardScaler()
@@ -58,7 +60,13 @@ def train_model(data_path="diabetes.csv", model_path="diabetes_model.pkl", scale
     joblib.dump(model, model_path)
     joblib.dump(scaler, scaler_path)
 
-def predict_samples(samples, model_path="diabetes_model.pkl", scaler_path="scaler.pkl"):
+def predict_samples(samples, model_path=None, scaler_path=None):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # 当前文件所在目录
+    if model_path is None:
+        model_path = os.path.join(BASE_DIR, "diabetes_model.pkl")
+    if scaler_path is None:
+        scaler_path = os.path.join(BASE_DIR, "scaler.pkl")
+
     # 加载模型与Scaler
     model = joblib.load(model_path)
     scaler = joblib.load(scaler_path)
@@ -81,3 +89,4 @@ def predict_samples(samples, model_path="diabetes_model.pkl", scaler_path="scale
             "概率": round(prob, 2)
         })
     return results
+
