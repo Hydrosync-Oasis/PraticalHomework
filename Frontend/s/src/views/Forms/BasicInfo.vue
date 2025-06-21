@@ -19,7 +19,7 @@
 
             <el-form-item label="年龄" class="item">
                 <Field name="age" v-slot="{ field }">
-                    <el-input v-bind="field" v-model.number="field.value" placeholder="请输入年龄" />
+                    <el-input v-bind="field" v-model="field.value" placeholder="请输入年龄" />
                 </Field>
                 <div class="msg">
                     <ErrorMessage name="age" />
@@ -69,7 +69,10 @@ const emit = defineEmits(['submit'])
 
 const schema = readonly(yup.object({
   gender: yup.string().required('请选择性别'),
-  age: yup.number().typeError('请输入数字').required('请输入年龄').min(0).max(150),
+  age: yup.number()
+    .typeError('请输入数字')
+    .required('请输入年龄')
+    .min(0).max(150),
   smoking: yup.boolean().required(),
   alcohol_consuming: yup.boolean().required(),
   peer_pressure: yup.boolean().required()
