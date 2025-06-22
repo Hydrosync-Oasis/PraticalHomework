@@ -24,7 +24,7 @@ predict_bp = create_predict_bp()
 app.register_blueprint(predict_bp, url_prefix='/api')  # /api/predict
 analysis_bp = create_analysis_bp()
 app.register_blueprint(analysis_bp, url_prefix='/api/analysis')  # /api/analysis/...
-app.register_blueprint(brain_bp, url_prefix='/api')  # 脑肿瘤接口，比如 /api/brain_tumor_predict
+app.register_blueprint(brain_bp, url_prefix='/api')  # /api/brain_tumor_predict
 
 @app.route('/')
 def home():
