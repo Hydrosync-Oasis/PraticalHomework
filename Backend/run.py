@@ -1,13 +1,12 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-from tangniaobing.diabetes_predict_bp import diabetes_predict_bp  # 新导入
+from tangniaobing.diabetes_predict_bp import diabetes_predict_bp  # 糖尿病预测蓝图
 from tangniaobing.diabetes_model import train_model
-from app.predict_bp import create_predict_bp
-from analysis import create_analysis_bp
+from app.predict_bp import create_predict_bp  # 肺癌预测蓝图工厂
+from analysis import create_analysis_bp      # 分析蓝图工厂
+from app.brain_tumor_predict_bp import brain_bp  # 脑肿瘤预测蓝图
+
 import traceback
-from app.brain_tumor_predict_bp import brain_bp  # 导入脑肿瘤预测蓝图
-
-
 
 app = Flask(__name__)
 
@@ -20,17 +19,19 @@ CORS(app, resources={
 })
 
 # 注册蓝图
-app.register_blueprint(diabetes_predict_bp)  # 注册糖尿病预测蓝图，默认路径 /predict_1
+app.register_blueprint(diabetes_predict_bp)  # /predict_1
 predict_bp = create_predict_bp()
-app.register_blueprint(predict_bp, url_prefix='/api')
+app.register_blueprint(predict_bp, url_prefix='/api')  # /api/predict
 analysis_bp = create_analysis_bp()
-app.register_blueprint(analysis_bp, url_prefix='/api/analysis')
-app.register_blueprint(brain_bp, url_prefix='/api')
-
+app.register_blueprint(analysis_bp, url_prefix='/api/analysis')  # /api/analysis/...
+app.register_blueprint(brain_bp, url_prefix='/api')  # 脑肿瘤接口，比如 /api/brain_tumor_predict
 
 @app.route('/')
 def home():
-    return 'API 服务已启动。肺癌预测接口: /api/predict  糖尿病预测接口: /predict_1  脑部肿瘤预测接口: /api/brain_tumor'
+    return ('API 服务已启动。'
+            '肺癌预测接口: /api/predict  '
+            '糖尿病预测接口: /predict_1  '
+            '脑部肿瘤预测接口: /api/brain_tumor_predict')
 
 if __name__ == '__main__':
     app.run(debug=True)
