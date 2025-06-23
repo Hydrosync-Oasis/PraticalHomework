@@ -12,7 +12,7 @@ brain_bp = Blueprint('brain_bp', __name__)
 model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'brain_tumor_model.h5')
 model = load_model(model_path)
 
-@brain_bp.route('/brain_tumor', methods=['POST'])
+@brain_bp.route('/predict/brain_tumor', methods=['POST'])
 def predict_brain_tumor():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400

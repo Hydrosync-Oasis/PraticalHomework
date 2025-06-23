@@ -36,17 +36,23 @@
 
       </el-menu-item-group>
     </el-sub-menu>
-    <el-menu-item index="/analysis">
+    <el-menu-item index="/analysis/lung">
       <el-icon>
         <DataAnalysis />
       </el-icon>
       <span>肺癌预测</span>
     </el-menu-item>
-    <el-menu-item index="/diabetes">
+    <el-menu-item index="/analysis/diabetes">
       <el-icon>
         <DataAnalysis />
       </el-icon>
       <span>糖尿病预测</span>
+    </el-menu-item>
+    <el-menu-item index="/analysis/tumor">
+      <el-icon>
+        <DataAnalysis />
+      </el-icon>
+      <span>脑瘤预测</span>
     </el-menu-item>
   </el-menu>
 </template>

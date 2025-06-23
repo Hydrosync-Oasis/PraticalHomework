@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Analysis from '../views/Analysis.vue'
 import Diabetes from '../views/Diabetes.vue'
+import BrainTumor from '@/views/BrainTumor.vue'
 
 const routes = [
   { path: '/', redirect: '/dashboard/age' },
@@ -17,8 +18,9 @@ const routes = [
       { path: 'smoking', name: 'SmokingAnalysis' },
     ]
   },
-  { path: '/analysis', component: Analysis },
-  { path: '/diabetes', component: Diabetes }
+  { path: '/analysis/lung', component: Analysis },
+  { path: '/analysis/diabetes', component: Diabetes },
+  { path: '/analysis/tumor', component: BrainTumor}
 ]
 
 const router = createRouter({

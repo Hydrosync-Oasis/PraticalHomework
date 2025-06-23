@@ -9,3 +9,6 @@ export function PredictDiabetes(data) {
     return axios.post('/predict_diabetes', data)
 }
 
+export function PredictTumor(data) {
+    return axios.post('/predict/brain_tumor', data)
+}
