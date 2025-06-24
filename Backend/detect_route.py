@@ -32,7 +32,7 @@ def upload_and_detect():
             return jsonify({"error": f"Invalid image: {str(e)}"}), 400
 
         # 模型推理
-        results = model(upload_path)
+        results = model.predict(upload_path)
         result_img_array = results[0].plot()
         Image.fromarray(result_img_array).save(detect_path)
 
