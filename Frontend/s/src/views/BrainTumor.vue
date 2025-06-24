@@ -59,7 +59,7 @@ async function handleSubmit() {
     console.log(res);
     result.value = {
       prediction: res.predicted_label,
-      probability: res.tumor_probability,
+      probability: res.probability[res.predicted_label],
       predictionLabel: res.predicted_label
     }
   } catch (e) {

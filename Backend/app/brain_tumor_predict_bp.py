@@ -48,7 +48,7 @@ def predict_brain_tumor():
         return jsonify({
             'filename': file.filename,
             'predicted_label': pred_label,
-            'probabilities': {label_names[i]: round(float(p), 4) for i, p in enumerate(probs)},
+            'probability': {label_names[i]: round(float(p), 4) for i, p in enumerate(probs)},
             'predicted_index': pred_index
         })
     except Exception as e:
