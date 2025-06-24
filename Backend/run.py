@@ -8,7 +8,7 @@ from tangniaobing.diabetes_predict_bp import diabetes_predict_bp         # /api/
 from app.predict_bp import create_predict_bp                             # /api/predict
 from analysis import create_analysis_bp                                  # /api/analysis
 from app.brain_tumor_predict_bp import brain_bp                          # /api/brain_tumor_predict
-from Backend.detect_route import detect_bp                                   # /api/yolo_detect
+from detect_route import detect_bp                                   # /api/yolo_detect
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # 禁用浏览器缓存（用于图像等静态资源）
