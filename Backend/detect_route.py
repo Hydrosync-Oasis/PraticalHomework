@@ -27,7 +27,9 @@ def upload_and_detect():
             image_file.save(upload_path)
 
             # 使用模型进行目标检测
-            results = model.predict(upload_path)
+            # 载入图像并推理
+            results = model(upload_path)  # 直接调用模型本身而不是 .predict()
+            # 获取绘图图像
             result_img_array = results[0].plot()
             Image.fromarray(result_img_array).save(detect_path)
 
