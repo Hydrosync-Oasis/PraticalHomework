@@ -16,7 +16,7 @@ DETECT_FOLDER = 'static/detections'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(DETECT_FOLDER, exist_ok=True)
 
-@detect_bp.route('/', methods=['GET', 'POST'])
+@detect_bp.route('/yolo_detect', methods=['POST'])
 def upload_and_detect():
     if request.method == 'POST':
         image_file = request.files.get("image")
