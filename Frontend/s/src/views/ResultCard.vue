@@ -1,26 +1,27 @@
 <template>
   <el-card class="result-card" shadow="hover">
-    <div class="result-header" :class="resultClass">
-      <el-icon :size="36">
-        <CircleCheck v-if="prediction === 0" />
-        <WarningFilled v-else />
-      </el-icon>
-      <span class="result-label">
-        {{ predictionLabel }}
-      </span>
-    </div>
-    <div class="result-probability">
-      <el-progress
-        :percentage="probabilityPercent"
-        :color="probabilityColor"
-        :stroke-width="18"
-        status="error"
-        :text-inside="true"
-      >
-      </el-progress>
-      <span class="probability-text">
-        患病概率：{{ probabilityPercent }}%
-      </span>
+    <div class="card-content">
+      <div class="result-header" :class="resultClass">
+        <el-icon :size="36">
+          <CircleCheck v-if="prediction === 0" />
+          <WarningFilled v-else />
+        </el-icon>
+        <span class="result-label">
+          {{ predictionLabel }}
+        </span>
+      </div>
+      <div class="result-probability">
+        <el-progress :percentage="probabilityPercent" :color="probabilityColor" :stroke-width="18" status="error"
+          :text-inside="true">
+        </el-progress>
+        <span class="probability-text">
+          患病概率：{{ probabilityPercent }}%
+        </span>
+      </div>
+      <div class="img">
+        <slot>
+        </slot>
+      </div>
     </div>
   </el-card>
 </template>
@@ -56,6 +57,16 @@ const probabilityColor = computed(() =>
 </script>
 
 <style scoped>
+.img {
+  display: flex;
+  flex-direction: column;
+}
+.card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-flow: 1;
+}
 .result-card {
   max-width: 400px;
   margin: 0 auto;
@@ -71,7 +82,6 @@ const probabilityColor = computed(() =>
   justify-content: center;
   font-size: 1.8rem;
   font-weight: bold;
-  margin-bottom: 24px;
   gap: 12px;
 }
 .result-header.cancer {
@@ -81,13 +91,11 @@ const probabilityColor = computed(() =>
   color: #67C23A;
 }
 .result-probability {
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .probability-text {
-  margin-top: 10px;
   font-size: 1.15rem;
   color: #333;
 }

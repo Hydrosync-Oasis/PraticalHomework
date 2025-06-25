@@ -4,6 +4,7 @@ from tangniaobing.diabetes_predict_bp import diabetes_predict_bp  # 糖尿病预
 from app.predict_bp import create_predict_bp  # 肺癌预测蓝图工厂
 from analysis import create_analysis_bp      # 分析蓝图工厂
 from app.brain_tumor_predict_bp import brain_bp  # 脑肿瘤预测蓝图
+from detect_route import detect_bp
 from flask import Flask
 from app.apis.boxplot_api import boxplot_api
 from app.apis.scatter_bmi_api import scatter_bmi_api
@@ -30,6 +31,7 @@ app.register_blueprint(predict_bp, url_prefix='/api')  # /api/predict
 analysis_bp = create_analysis_bp()
 app.register_blueprint(analysis_bp, url_prefix='/api/analysis')  # /api/analysis/...
 app.register_blueprint(brain_bp, url_prefix='/api')  # /api/brain_tumor_predict
+app.register_blueprint(detect_bp, url_prefix='/api')  # /api/brain_tumor_predict
 
 app.register_blueprint(boxplot_api, url_prefix='/api/analysis/boxplot')
 app.register_blueprint(scatter_bmi_api, url_prefix='/api/analysis/scatter_bmi')
