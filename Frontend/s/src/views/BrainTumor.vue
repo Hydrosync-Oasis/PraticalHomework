@@ -41,7 +41,7 @@ const result = ref({
       })
 
 function beforeUpload() {
-  // 阻止 el-upload 自动上
+  // 阻止 el-upload 自动上传
   return false
 }
 

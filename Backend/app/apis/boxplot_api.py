@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from Backend.app.spark_analysis import get_boxplot_data
+from app.spark_analysis import get_boxplot_data
 
 boxplot_api = Blueprint('boxplot_api', __name__)
 

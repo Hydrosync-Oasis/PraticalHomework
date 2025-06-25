@@ -4,7 +4,7 @@ import io
 import base64
 
 #  关键导入：从 utils 包导入自定义绘图函数
-from Backend.utils.visualize import (
+from utils.visualize import (
     plot_age_distribution,
     plot_categorical_counts,
     plot_correlation_heatmap,

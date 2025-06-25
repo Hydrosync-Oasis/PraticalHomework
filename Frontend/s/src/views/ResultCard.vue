@@ -22,6 +22,11 @@
         患病概率：{{ probabilityPercent }}%
       </span>
     </div>
+    <div>
+      <slot>
+      <!-- 放入图片 -->
+      </slot>
+    </div>
   </el-card>
 </template>
 

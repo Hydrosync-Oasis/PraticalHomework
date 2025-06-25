@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from Backend.app.spark_analysis import get_correlation_data
+from app.spark_analysis import get_correlation_data
 
 correlation_api = Blueprint('correlation_api', __name__)
 
