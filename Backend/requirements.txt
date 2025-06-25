@@ -5,3 +5,6 @@ seaborn>=0.11.0
 scikit-learn>=1.0.0
 imbalanced-learn>=0.8.0
 joblib>=1.1.0
+
+ultralytics>=8.3.158
+ultralytics-thop>=2.0.14
