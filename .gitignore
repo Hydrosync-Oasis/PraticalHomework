@@ -69,3 +69,5 @@ vscode/
 
 # etc
 Backend/utils/__pycache__
+Backend/static/detections
+Backend/static/uploads
