@@ -12,3 +12,9 @@ export function PredictDiabetes(data) {
 export function PredictTumor(data) {
     return axios.post('/predict/brain_tumor', data)
 }
+
+export function PredictTumorPosition(data) {
+    return axios.post('/yolo_detect', data, {
+        responseType: 'blob'
+    })
+}

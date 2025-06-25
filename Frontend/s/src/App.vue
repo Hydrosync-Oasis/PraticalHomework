@@ -55,7 +55,5 @@ html, body, #app {
   padding: 0;
   box-sizing: border-box;
   position: relative;
-  display: flex;
-  flex-direction: column;
 }
 </style>

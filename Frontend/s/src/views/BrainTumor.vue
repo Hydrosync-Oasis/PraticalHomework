@@ -1,36 +1,29 @@
 <template>
   <el-card class="upload-card">
-    <div class="title">脑肿瘤类型识别</div>
-    <el-upload
-      class="upload-demo"
-      drag
-      action=""
-      :auto-upload="false"
-      :before-upload="beforeUpload"
-      :on-change="handleChange"
-      :file-list="fileList"
-      accept="image/*"
-    >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">拖拽或点击上传脑部影像</div>
-    </el-upload>
-    <el-button
-      class="upload-btn"
-      type="primary"
-      :disabled="fileList.length===0 || loading"
-      @click="handleSubmit"
-    >识别肿瘤类型</el-button>
-    <div v-if="loading" class="loading">正在识别，请稍候...</div>
-    <result-view v-if="result.prediction" v-bind="result" />
+    <div class="card-content">
+      <div class="title">脑肿瘤类型识别</div>
+      <el-upload class="upload-demo" drag action="" :auto-upload="false" :before-upload="beforeUpload"
+        :on-change="handleChange" :file-list="fileList" accept="image/*">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">拖拽或点击上传脑部影像</div>
+      </el-upload>
+      <el-button class="upload-btn" type="primary" :disabled="fileList.length===0 || loading"
+        @click="handleSubmit">识别肿瘤类型</el-button>
+      <div v-if="loading" class="loading">正在识别，请稍候...</div>
+      <result-view v-if="result.prediction" v-bind="result" class="result">
+        <img :src="yoloResult" class="yolo-img" />
+
+      </result-view>
+
+    </div>
   </el-card>
 </template>
-    <!-- :probability="result.probability" :prediction="result.prediction" :prediction-label="result.predictedLabel" -->
 
 <script setup>
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import ResultView from './ResultCard.vue'
-import { PredictTumor } from '@/api/ml'
+import { PredictTumor, PredictTumorPosition } from '@/api/ml'
 
 const fileList = ref([])
 const loading = ref(false)
@@ -39,6 +32,7 @@ const result = ref({
         probability: null,
         predictionLabel: null
       })
+const yoloResult = ref('');
 
 function beforeUpload() {
   // 阻止 el-upload 自动上传
@@ -56,7 +50,13 @@ async function handleSubmit() {
     const formData = new FormData()
     formData.append('image', fileList.value[0].raw)
     const res = (await PredictTumor(formData)).data
-    console.log(res);
+    // blob
+    const yoloRes = (await PredictTumorPosition(formData)).data
+
+    const blob = new Blob([yoloRes], { type: 'image/jpeg' });
+    const imageUrl = URL.createObjectURL(blob);
+    yoloResult.value = imageUrl;
+
     result.value = {
       prediction: res.predicted_label,
       probability: res.probability[res.predicted_label],
@@ -71,7 +71,36 @@ async function handleSubmit() {
 }
 </script>
 
+<style>
+.el-card__body {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+</style>
+
 <style scoped>
+.card-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.result {
+  flex-grow: 1;
+  /* max-height: 500px; */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.yolo-img {
+  width: 100%;
+  object-fit: cover;
+  flex-grow: 1;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em;
+}
 .upload-card {
   max-width: 420px;
   margin: 40px auto;
@@ -97,5 +126,8 @@ async function handleSubmit() {
   text-align: center;
   color: #409EFF;
   margin-bottom: 16px;
+}
+.yolo-img {
+  height: 100%;
 }
 </style>
