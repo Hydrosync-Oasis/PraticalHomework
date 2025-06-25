@@ -147,8 +147,8 @@ const barChartOption = computed(() => {
       legend: [
         {
           // 柱状图图例
-          data: ['肺癌患者', '非肺癌患者'],
-          top: 10,
+        data: ['肺癌患者', '非肺癌患者'],
+        top: 10,
           left: '20%', // 更靠左一些
           textStyle: {
             fontSize: 12,

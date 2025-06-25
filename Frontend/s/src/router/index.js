@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Analysis from '../views/Analysis.vue'
 import Diabetes from '../views/Diabetes.vue'
 import BrainTumor from '@/views/BrainTumor.vue'
+import DataDashboard from '@/views/DataDashboard.vue'
 
 const routes = [
   { path: '/', redirect: '/dashboard/age' },
@@ -20,7 +21,8 @@ const routes = [
   },
   { path: '/analysis/lung', component: Analysis },
   { path: '/analysis/diabetes', component: Diabetes },
-  { path: '/analysis/tumor', component: BrainTumor}
+  { path: '/analysis/tumor', component: BrainTumor},
+  { path: '/datadashboard', name: 'DataDashboard', component: DataDashboard }
 ]
 
 const router = createRouter({

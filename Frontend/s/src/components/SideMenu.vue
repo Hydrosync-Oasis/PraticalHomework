@@ -36,6 +36,12 @@
 
       </el-menu-item-group>
     </el-sub-menu>
+    <el-menu-item index="/datadashboard">
+      <el-icon>
+        <PieChart />
+      </el-icon>
+      <span>数据可视化大屏</span>
+    </el-menu-item>
     <el-menu-item index="/analysis/lung">
       <el-icon>
         <DataAnalysis />
@@ -60,7 +66,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
-import { HomeFilled, DataAnalysis, Setting, Calendar, User, Connection, Smoking } from '@element-plus/icons-vue'
+import { HomeFilled, DataAnalysis, Setting, Calendar, User, Connection, Smoking, PieChart } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const activePath = computed(() => route.path)

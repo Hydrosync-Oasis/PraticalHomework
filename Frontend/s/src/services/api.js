@@ -44,12 +44,37 @@ export const analysisApi = {
   }
 };
 
-// 预测相关API
-export const predictionApi = {
-  // 提交用户数据进行预测
-  predictCancer(userData) {
-    return apiClient.post('/predict', userData);
+// 数据可视化大屏相关API
+export const dashboardApi = {
+  // 获取箱线图数据（吸烟者与收费关系）
+  getBoxplotData() {
+    return apiClient.get('/analysis/boxplot');
+  },
+  
+  // 获取BMI与收费散点图数据
+  getScatterBmiData() {
+    return apiClient.get('/analysis/scatter_bmi');
+  },
+  
+  // 获取年龄直方图数据
+  getAgeHistData() {
+    return apiClient.get('/analysis/age_hist');
+  },
+  
+  // 获取地区平均收费数据
+  getRegionAvgData() {
+    return apiClient.get('/analysis/region_avg');
+  },
+  
+  // 获取年龄与收费及吸烟者散点图数据
+  getScatterAgeData() {
+    return apiClient.get('/analysis/scatter_age');
+  },
+  
+  // 获取相关性数据
+  getCorrelationData() {
+    return apiClient.get('/analysis/correlation');
   }
 };
 
-export default { analysisApi, predictionApi }; 
+export default { analysisApi, dashboardApi }; 

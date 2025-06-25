@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from Backend.app.spark_analysis import get_scatter_bmi_charges
+from ..spark_analysis import get_scatter_bmi_charges
 
 scatter_bmi_api = Blueprint('scatter_bmi_api', __name__)
 
