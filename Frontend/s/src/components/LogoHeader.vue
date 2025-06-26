@@ -2,7 +2,7 @@
   <header class="logo-header">
     <div class="logo">
       <div>
-        Lung Cancer预测系统
+        医疗大数据分析系统
       </div>
 
       <span>
