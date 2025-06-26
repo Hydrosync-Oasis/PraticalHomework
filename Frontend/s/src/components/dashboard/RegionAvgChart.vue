@@ -86,7 +86,7 @@ const chartOption = computed(() => ({
   },
   yAxis: {
     type: 'value',
-    name: '平均医疗费用',
+    name: '平均医保费用',
     nameLocation: 'middle',
     nameGap: 40,
     nameTextStyle: {

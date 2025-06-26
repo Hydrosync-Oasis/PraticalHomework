@@ -1,6 +1,6 @@
 <template>
   <div class="chart-wrapper">
-    <div class="chart-title">BMI vs 医疗赔付 散点图</div>
+    <div class="chart-title">BMI vs 医保赔付 散点图</div>
     <div class="chart-container" v-loading="loading" element-loading-background="rgba(15, 37, 75, 0.7)" element-loading-text="数据加载中..." element-loading-svg-view-box="-10, -10, 50, 50">
       <v-chart class="chart" :option="chartOption" autoresize />
     </div>
@@ -43,7 +43,7 @@ function formatMoney(value) {
   return `$${Math.round(value).toLocaleString()}`;
 }
 
-// 计算BMI与医疗费用的趋势线
+// 计算BMI与医保费用的趋势线
 function calculateTrendLine(data) {
   if (!data || data.length < 2) return [[0, 0], [0, 0]];
   
@@ -111,7 +111,7 @@ const chartOption = computed(() => {
       trigger: 'item',
       formatter: function(params) {
         if (params.seriesIndex === 0) {
-          return `BMI: ${params.value[0].toFixed(1)}<br/>医疗费用: ${formatMoney(params.value[1])}`;
+          return `BMI: ${params.value[0].toFixed(1)}<br/>医保费用: ${formatMoney(params.value[1])}`;
         } else {
           return '趋势线';
         }
@@ -126,7 +126,7 @@ const chartOption = computed(() => {
       }
     },
     legend: {
-      data: ['BMI与医疗费用', '趋势线'],
+      data: ['BMI与医保费用', '趋势线'],
       textStyle: {
         color: '#fff',
         fontSize: 12
@@ -175,7 +175,7 @@ const chartOption = computed(() => {
     },
     yAxis: {
       type: 'value',
-      name: '医疗费用',
+      name: '医保费用',
       nameLocation: 'middle',
       nameGap: 40,
       nameTextStyle: {
@@ -206,11 +206,11 @@ const chartOption = computed(() => {
     },
     series: [
       {
-        name: 'BMI与医疗费用',
+        name: 'BMI与医保费用',
         type: 'scatter',
         data: safeData,
         symbolSize: function(data) {
-          // 根据医疗费用调整点的大小
+          // 根据医保费用调整点的大小
           return Math.sqrt(data[1]) / 50 + 5;
         },
         emphasis: {

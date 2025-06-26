@@ -45,7 +45,7 @@ function calculateCorrelation(data) {
   if (!data || data.length === 0) return [];
   
   const result = [];
-  const features = ['年龄', 'BMI', '子女数', '医疗费用'];
+  const features = ['年龄', 'BMI', '子女数', '医保费用'];
   
   // 提取每个特征的数据
   const age = data.map(item => item[0]);
@@ -97,7 +97,7 @@ const chartOption = computed(() => {
     tooltip: {
       position: 'top',
       formatter: function(params) {
-        const features = ['年龄', 'BMI', '子女数', '医疗费用'];
+        const features = ['年龄', 'BMI', '子女数', '医保费用'];
         const x = features[params.value[0]];
         const y = features[params.value[1]];
         const value = formatCorrelation(params.value[2]);
@@ -123,7 +123,7 @@ const chartOption = computed(() => {
     },
     xAxis: {
       type: 'category',
-      data: ['年龄', 'BMI', '子女数', '医疗费用'],
+      data: ['年龄', 'BMI', '子女数', '医保费用'],
       axisLine: {
         lineStyle: {
           color: '#0f6ecd'
@@ -145,7 +145,7 @@ const chartOption = computed(() => {
     },
     yAxis: {
       type: 'category',
-      data: ['年龄', 'BMI', '子女数', '医疗费用'],
+      data: ['年龄', 'BMI', '子女数', '医保费用'],
       axisLine: {
         lineStyle: {
           color: '#0f6ecd'
@@ -244,6 +244,10 @@ const chartOption = computed(() => {
   background-color: rgba(15, 37, 75, 0.8);
   font-weight: bold;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 4px;
 }
 
 .chart-container {

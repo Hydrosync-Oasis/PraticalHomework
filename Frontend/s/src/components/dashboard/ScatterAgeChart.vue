@@ -1,6 +1,6 @@
 <template>
   <div class="chart-wrapper">
-    <div class="chart-title">年龄 vs 医疗费用 (按吸烟状态)</div>
+    <div class="chart-title">年龄 vs 医保费用 (按吸烟状态)</div>
     <div class="chart-container" v-loading="loading" element-loading-background="rgba(15, 37, 75, 0.7)" element-loading-text="数据加载中..." element-loading-svg-view-box="-10, -10, 50, 50">
       <v-chart class="chart" :option="chartOption" autoresize />
     </div>
@@ -68,7 +68,7 @@ const chartOption = computed(() => {
       formatter: function(params) {
         if (params.seriesIndex <= 1) {
           const smokerStatus = params.seriesIndex === 0 ? '吸烟者' : '非吸烟者';
-          return `${smokerStatus}<br/>年龄: ${params.value[0]}岁<br/>医疗费用: ${formatMoney(params.value[1])}`;
+          return `${smokerStatus}<br/>年龄: ${params.value[0]}岁<br/>医保费用: ${formatMoney(params.value[1])}`;
         } else {
           return `${params.seriesName}: ${formatMoney(params.value)}`;
         }
@@ -132,7 +132,7 @@ const chartOption = computed(() => {
     },
     yAxis: {
       type: 'value',
-      name: '医疗费用',
+      name: '医保费用',
       nameLocation: 'middle',
       nameGap: 40,
       nameTextStyle: {
@@ -279,6 +279,10 @@ const chartOption = computed(() => {
   background-color: rgba(15, 37, 75, 0.8);
   font-weight: bold;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 4px;
 }
 
 .chart-container {

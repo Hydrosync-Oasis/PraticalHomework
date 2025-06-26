@@ -20,7 +20,7 @@
           </el-button>
           <el-button type="primary" :icon="RefreshRight" @click="refreshAll" :loading="loading" size="small">刷新</el-button>
         </div>
-        <div class="main-title">医疗数据分析平台</div>
+        <div class="main-title">医保数据分析平台</div>
         <div class="time">
           {{ currentTime }}
           <div class="date">{{ currentDate }}</div>
@@ -40,10 +40,24 @@
         </div>
       </div>
       
-      <!-- 主要内容区域 - 左侧雷达图 + 右侧4个小图表 -->
+      <!-- 主要内容区域 - 三列布局：左侧两个年龄图表 + 中间雷达图 + 右侧两个图表 -->
       <div class="main-content-row">
-        <!-- 左侧雷达图 -->
+        <!-- 左侧两个年龄相关图表 -->
         <div class="left-column">
+          <div class="left-row">
+            <div class="chart-box small-chart">
+              <AgeHistChart :data="ageHistData" :loading="loading" />
+            </div>
+          </div>
+          <div class="left-row">
+            <div class="chart-box small-chart">
+              <ScatterAgeChart :data="scatterAgeData" :loading="loading" />
+            </div>
+          </div>
+        </div>
+        
+        <!-- 中间雷达图 -->
+        <div class="middle-column">
           <div class="chart-box main-chart">
             <MedicalRadarChart 
               :boxplotData="boxplotData" 
@@ -57,20 +71,14 @@
           </div>
         </div>
         
-        <!-- 右侧4个小图表 -->
+        <!-- 右侧两个图表 -->
         <div class="right-column">
           <div class="right-row">
-            <div class="chart-box small-chart">
-              <AgeHistChart :data="ageHistData" :loading="loading" />
-            </div>
             <div class="chart-box small-chart">
               <RegionAvgChart :data="regionAvgData" :loading="loading" />
             </div>
           </div>
           <div class="right-row">
-            <div class="chart-box small-chart">
-              <ScatterAgeChart :data="scatterAgeData" :loading="loading" />
-            </div>
             <div class="chart-box small-chart">
               <CorrelationChart :data="correlationData" :loading="loading" />
             </div>
@@ -404,38 +412,56 @@ onBeforeUnmount(() => {
 }
 
 .left-column {
-  width: 45%;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: width 0.3s ease;
+}
+
+.left-row {
+  flex: none; /* 不使用flex自适应 */
+  height: calc((100vh - 320px) / 2); /* 固定高度为可用空间的一半 */
+  display: flex;
+  flex-direction: column;
+}
+
+.middle-column {
+  width: 40%;
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
 }
 
 .right-column {
-  width: 55%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   gap: 15px;
   transition: width 0.3s ease;
 }
 
-/* 当菜单折叠时的样式 */
-.full-screen .left-column {
-  width: 40%;
-}
-
-.full-screen .right-column {
-  width: 60%;
-}
-
 .right-row {
-  flex: 1;
+  flex: none; /* 不使用flex自适应 */
+  height: calc((100vh - 320px) / 2); /* 固定高度为可用空间的一半 */
   display: flex;
-  gap: 15px;
+  flex-direction: column;
 }
 
-.right-row:last-child {
-  margin-top: -10px; /* 减小上下两行图表之间的间距，原来是-5px */
-  padding-bottom: 10px; /* 增加下方图表的高度，原来是5px */
+/* 雷达图容器去除边框 */
+.middle-column .chart-box {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.middle-column .chart-box::before {
+  content: none !important;
+}
+
+.middle-column .main-chart::before,
+.middle-column .main-chart::after {
+  content: none !important;
 }
 
 .chart-box {
@@ -520,18 +546,24 @@ onBeforeUnmount(() => {
   }
   
   .left-column,
+  .middle-column,
   .right-column {
     width: 100%;
   }
   
-  .left-column {
+  .left-row,
+  .right-row {
+    height: 350px; /* 在小屏幕上保持一个固定高度 */
+    margin-bottom: 15px;
+  }
+  
+  .middle-column {
     min-height: 400px;
   }
 }
 
 @media (max-width: 768px) {
-  .top-row,
-  .right-row {
+  .top-row {
     flex-direction: column;
     height: auto;
   }
@@ -540,8 +572,23 @@ onBeforeUnmount(() => {
     min-height: 200px;
   }
   
-  .left-column {
-    min-height: 350px;
+  .left-column,
+  .middle-column,
+  .right-column {
+    min-height: auto;
   }
+}
+
+/* 当菜单折叠时的样式 */
+.full-screen .left-column {
+  width: 30%;
+}
+
+.full-screen .middle-column {
+  width: 40%;
+}
+
+.full-screen .right-column {
+  width: 30%;
 }
 </style> 

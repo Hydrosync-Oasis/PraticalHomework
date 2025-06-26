@@ -1,6 +1,6 @@
 <template>
   <div class="chart-wrapper">
-    <div class="chart-title">吸烟状态 vs 医疗赔付箱线图</div>
+    <div class="chart-title">吸烟状态 vs 医保赔付箱线图</div>
     <div class="chart-container" v-loading="loading" element-loading-background="rgba(15, 37, 75, 0.7)" element-loading-text="数据加载中..." element-loading-svg-view-box="-10, -10, 50, 50">
       <v-chart class="chart" :option="chartOption" autoresize />
     </div>
@@ -66,7 +66,7 @@ const chartOption = computed(() => {
   // 确保 data 不为 null，如果为 null 则使用默认空数组
   const safeData = props.data || { yes: [], no: [] };
   
-  // 计算吸烟者和非吸烟者的平均医疗费用
+  // 计算吸烟者和非吸烟者的平均医保费用
   const smokerAvg = safeData.yes.length > 0 
     ? safeData.yes.reduce((sum, val) => sum + val, 0) / safeData.yes.length 
     : 0;
@@ -81,14 +81,14 @@ const chartOption = computed(() => {
       formatter: function(params) {
         if (params.seriesIndex === 0) {
           if (params.dataIndex === 0) {
-            return `非吸烟者医疗费用:<br/>
+            return `非吸烟者医保费用:<br/>
                     最小值: ${formatMoney(params.data[1])}<br/>
                     下四分位: ${formatMoney(params.data[2])}<br/>
                     中位数: ${formatMoney(params.data[3])}<br/>
                     上四分位: ${formatMoney(params.data[4])}<br/>
                     最大值: ${formatMoney(params.data[5])}`;
           } else {
-            return `吸烟者医疗费用:<br/>
+            return `吸烟者医保费用:<br/>
                     最小值: ${formatMoney(params.data[1])}<br/>
                     下四分位: ${formatMoney(params.data[2])}<br/>
                     中位数: ${formatMoney(params.data[3])}<br/>
@@ -141,7 +141,7 @@ const chartOption = computed(() => {
     },
     yAxis: {
       type: 'value',
-      name: '医疗费用',
+      name: '医保费用',
       nameLocation: 'middle',
       nameGap: 40,
       nameTextStyle: {

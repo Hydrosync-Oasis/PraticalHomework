@@ -1,6 +1,6 @@
 <template>
   <div class="chart-wrapper">
-    <div class="chart-title">医疗数据综合分析雷达图</div>
+    <div class="chart-title">医保数据综合分析雷达图</div>
     <div class="chart-container" v-loading="loading" element-loading-background="rgba(15, 37, 75, 0.7)" element-loading-text="数据加载中..." element-loading-svg-view-box="-10, -10, 50, 50">
       <v-chart class="chart" :option="chartOption" autoresize />
     </div>
@@ -69,13 +69,13 @@ const props = defineProps({
 
 // 指标颜色
 const indicatorColors = [
-  '#FF6384', // 吸烟者医疗费用
-  '#36A2EB', // 非吸烟者医疗费用
+  '#FF6384', // 吸烟者医保费用
+  '#36A2EB', // 非吸烟者医保费用
   '#FFCE56', // 平均BMI指数
   '#4BC0C0', // 平均年龄
-  '#9966FF', // 地区医疗费用差异
-  '#FF9F40', // 年龄-医疗费用相关性
-  '#C9CBCF'  // BMI-医疗费用相关性
+  '#9966FF', // 地区医保费用差异
+  '#FF9F40', // 年龄-医保费用相关性
+  '#C9CBCF'  // BMI-医保费用相关性
 ];
 
 // 计算综合数据指标
@@ -100,7 +100,7 @@ function formatNumber(value, type = 'default') {
 }
 
 const chartOption = computed(() => {
-  // 1. 计算吸烟者与非吸烟者的平均医疗费用
+  // 1. 计算吸烟者与非吸烟者的平均医保费用
   const smokerCharges = props.boxplotData?.yes?.length 
     ? props.boxplotData.yes.reduce((acc, val) => acc + val, 0) / props.boxplotData.yes.length
     : 0;
@@ -109,7 +109,7 @@ const chartOption = computed(() => {
     ? props.boxplotData.no.reduce((acc, val) => acc + val, 0) / props.boxplotData.no.length
     : 0;
   
-  // 2. 计算所有人群的平均BMI和平均医疗费用
+  // 2. 计算所有人群的平均BMI和平均医保费用
   const avgBmi = props.scatterBmiData?.length 
     ? props.scatterBmiData.reduce((acc, val) => acc + val[0], 0) / props.scatterBmiData.length
     : 0;
@@ -123,7 +123,7 @@ const chartOption = computed(() => {
     ? props.ageHistData.reduce((acc, val) => acc + val, 0) / props.ageHistData.length
     : 0;
   
-  // 4. 获取最高和最低地区医疗费用
+  // 4. 获取最高和最低地区医保费用
   let maxRegionCharge = 0;
   let minRegionCharge = Infinity;
   let avgRegionCharge = 0;
@@ -135,34 +135,34 @@ const chartOption = computed(() => {
     avgRegionCharge = regionValues.reduce((acc, val) => acc + val, 0) / regionValues.length;
   }
 
-  // 5. 计算年龄与医疗费用相关性
+  // 5. 计算年龄与医保费用相关性
   const ageChargeCorrelation = calculateAgeChargeCorrelation(props.scatterAgeData);
 
-  // 6. 从相关性矩阵中提取BMI与医疗费用的相关性
+  // 6. 从相关性矩阵中提取BMI与医保费用的相关性
   const bmiChargeCorrelation = calculateFeatureCorrelation(props.correlationData);
 
   // 将所有数据标准化到0-100的范围内，便于雷达图展示
   const maxMedicalCost = Math.max(smokerCharges, nonSmokerCharges, avgChargesFromBmi, maxRegionCharge);
   
   const indicators = [
-    { name: '吸烟者医疗费用', max: maxMedicalCost * 1.2 },
-    { name: '非吸烟者医疗费用', max: maxMedicalCost * 1.2 },
+    { name: '吸烟者医保费用', max: maxMedicalCost * 1.2 },
+    { name: '非吸烟者医保费用', max: maxMedicalCost * 1.2 },
     { name: '平均BMI指数', max: 40 }, // 正常BMI范围18.5-24.9，肥胖>30
     { name: '平均年龄', max: 65 }, // 假设数据集年龄范围
-    { name: '地区医疗费用差异', max: maxRegionCharge - minRegionCharge > 0 ? (maxRegionCharge - minRegionCharge) * 1.2 : 10000 },
-    { name: '年龄-医疗费用相关性', max: 1 }, // 相关性范围-1到1
-    { name: 'BMI-医疗费用相关性', max: 1 }, // 相关性范围-1到1
+    { name: '地区医保费用差异', max: maxRegionCharge - minRegionCharge > 0 ? (maxRegionCharge - minRegionCharge) * 1.2 : 10000 },
+    { name: '年龄-医保费用相关性', max: 1 }, // 相关性范围-1到1
+    { name: 'BMI-医保费用相关性', max: 1 }, // 相关性范围-1到1
   ];
 
   // 更新指标说明
   indicatorExplanations.value = [
-    { name: '吸烟者医疗费用', value: formatNumber(smokerCharges, 'money') },
-    { name: '非吸烟者医疗费用', value: formatNumber(nonSmokerCharges, 'money') },
+    { name: '吸烟者医保费用', value: formatNumber(smokerCharges, 'money') },
+    { name: '非吸烟者医保费用', value: formatNumber(nonSmokerCharges, 'money') },
     { name: '平均BMI指数', value: formatNumber(avgBmi, 'decimal') },
     { name: '平均年龄', value: `${formatNumber(avgAge, 'decimal')}岁` },
-    { name: '地区医疗费用差异', value: formatNumber(maxRegionCharge - minRegionCharge, 'money') },
-    { name: '年龄-医疗费用相关性', value: formatNumber(Math.abs(ageChargeCorrelation), 'correlation') },
-    { name: 'BMI-医疗费用相关性', value: formatNumber(Math.abs(bmiChargeCorrelation), 'correlation') }
+    { name: '地区医保费用差异', value: formatNumber(maxRegionCharge - minRegionCharge, 'money') },
+    { name: '年龄-医保费用相关性', value: formatNumber(Math.abs(ageChargeCorrelation), 'correlation') },
+    { name: 'BMI-医保费用相关性', value: formatNumber(Math.abs(bmiChargeCorrelation), 'correlation') }
   ];
 
   const dataValues = [
@@ -214,7 +214,7 @@ const chartOption = computed(() => {
     radar: {
       indicator: indicators,
       center: ['50%', '50%'],
-      radius: '58%',
+      radius: '70%',
       name: {
         textStyle: {
           color: '#fff',
@@ -253,7 +253,7 @@ const chartOption = computed(() => {
         data: [
           {
             value: dataValues,
-            name: '医疗数据综合分析',
+            name: '医保数据综合分析',
             symbol: 'circle',
             symbolSize: 8,
             areaStyle: {
@@ -323,7 +323,7 @@ const chartOption = computed(() => {
   };
 });
 
-// 计算年龄与医疗费用的相关性
+// 计算年龄与医保费用的相关性
 function calculateAgeChargeCorrelation(data) {
   if (!data || data.length === 0) return 0;
   
@@ -333,7 +333,7 @@ function calculateAgeChargeCorrelation(data) {
   return pearsonCorrelation(ages, charges);
 }
 
-// 从相关性数据中提取BMI与医疗费用的相关性
+// 从相关性数据中提取BMI与医保费用的相关性
 function calculateFeatureCorrelation(data) {
   if (!data || data.length === 0) return 0;
   
@@ -372,49 +372,58 @@ function pearsonCorrelation(x, y) {
   width: 100%;
   display: flex;
   flex-direction: column;
+  border: 0 none !important;
+  outline: 0 none !important;
+  box-shadow: none !important;
+  background-clip: content-box;
 }
 
 .chart-title {
-  height: 40px;
-  line-height: 40px;
+  height: 36px;
+  line-height: 36px;
   padding: 0 15px;
   font-size: 16px;
   color: #00FFFF;
-  border-bottom: 1px solid rgba(15, 110, 205, 0.5);
-  background-color: rgba(15, 37, 75, 0.8);
+  border: none;
+  border-bottom: none;
+  background-color: transparent;
   font-weight: bold;
   display: flex;
   justify-content: center;
 }
 
 .chart-container {
-  flex: 1;
+  flex: 3;
   width: 100%;
   position: relative;
+  border: 0 none !important;
 }
 
 .chart {
   width: 100%;
   height: 100%;
+  border: 0 none !important;
 }
 
 .chart-indicators {
+  flex: 0.8;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  background-color: rgba(15, 37, 75, 0.6);
+  gap: 6px;
+  padding: 6px;
+  background-color: transparent;
+  border: none;
 }
 
 .indicator-item {
   display: flex;
   align-items: center;
-  background-color: rgba(15, 37, 75, 0.8);
+  background-color: rgba(15, 37, 75, 0.3);
   border-radius: 4px;
   padding: 5px 10px;
   min-width: 140px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .indicator-color {
